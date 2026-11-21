@@ -1,0 +1,2409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartQuiz Portal — Student Assessment & Teacher Dashboard</title>
+    <!-- Supabase JS v2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg-page: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-subtle: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-light: #64748b;
+            --border-color: #cbd5e1;
+            --border-light: #e2e8f0;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-soft: #eff6ff;
+            --primary-border: #bfdbfe;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --success-border: #6ee7b7;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --danger-border: #fca5a5;
+            --warning: #d97706;
+            --warning-bg: #fffbeb;
+            --warning-border: #fcd34d;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+            --radius-md: 10px;
+            --radius-lg: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.55;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Configuration Notice Banner */
+        .setup-banner {
+            background: var(--warning-bg);
+            border-bottom: 1px solid var(--warning-border);
+            color: #92400e;
+            font-size: 13px;
+            padding: 10px 16px;
+            text-align: center;
+            line-height: 1.45;
+        }
+
+        .setup-banner code {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-weight: 700;
+            color: #78350f;
+        }
+
+        /* Top Navigation Header */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .brand-sub {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .nav-tabs {
+            display: inline-flex;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: 999px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .nav-tab-btn {
+            padding: 7px 16px;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .nav-tab-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.25);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px 16px 48px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .section-subtitle {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        /* Responsive Form Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        @media (max-width: 740px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-light);
+        }
+
+        .input, .select, .textarea {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-main);
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .textarea {
+            min-height: 68px;
+            resize: vertical;
+        }
+
+        .json-editor {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            min-height: 260px;
+            background: #0f172a;
+            color: #e2e8f0;
+            border-color: #334155;
+        }
+
+        .json-editor:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+        }
+
+        .input:focus, .select:focus, .textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 10px 16px;
+            font-size: 13.5px;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #ffffff;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #047857;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #ffffff;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #b91c1c;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: var(--text-main);
+            border-color: var(--border-color);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #f1f5f9;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12.5px;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            font-size: 13.5px;
+            font-weight: 500;
+            margin-top: 12px;
+        }
+
+        .alert-info {
+            background: var(--primary-soft);
+            border: 1px solid var(--primary-border);
+            color: #1e40af;
+        }
+
+        .alert-success {
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: #065f46;
+        }
+
+        .alert-error {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            color: #991b1b;
+        }
+
+        /* Progress Bar */
+        .progress-row {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .progress-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .progress-label strong {
+            color: var(--primary);
+        }
+
+        .progress-track {
+            flex: 1;
+            min-width: 160px;
+            max-width: 340px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            transition: width 0.25s ease;
+        }
+
+        /* Student Question Card */
+        .q-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .q-card.is-correct {
+            border-color: var(--success-border);
+            background-color: #f6fef9;
+        }
+
+        .q-card.is-incorrect {
+            border-color: var(--danger-border);
+            background-color: #fffafa;
+        }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .q-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .q-num {
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 6px;
+        }
+
+        .q-topic-badge {
+            background: var(--primary-soft);
+            color: var(--primary-dark);
+            border: 1px solid var(--primary-border);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 9px;
+            border-radius: 6px;
+        }
+
+        .q-status-pill {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: none;
+        }
+
+        .q-status-pill.correct {
+            display: inline-block;
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success-border);
+        }
+
+        .q-status-pill.incorrect {
+            display: inline-block;
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid var(--danger-border);
+        }
+
+        .q-text {
+            font-size: 15.5px;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        .q-input-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .q-input-row label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-light);
+        }
+
+        .q-answer-input {
+            width: 100%;
+            max-width: 310px;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-main);
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            outline: none;
+        }
+
+        .q-answer-input:focus {
+            background: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+        }
+
+        .q-answer-input.input-correct {
+            background: var(--success-bg);
+            border-color: var(--success);
+            color: #065f46;
+            font-weight: 700;
+        }
+
+        .q-answer-input.input-incorrect {
+            background: var(--danger-bg);
+            border-color: var(--danger);
+            color: #991b1b;
+        }
+
+        .q-feedback {
+            display: none;
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            border-radius: var(--radius-md);
+            font-size: 13.5px;
+        }
+
+        .ans-pill {
+            display: inline-block;
+            background: #ffffff;
+            color: #065f46;
+            border: 1px solid var(--success-border);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 5px;
+            margin-left: 4px;
+        }
+
+        /* Scorecard Banner */
+        .scorecard {
+            display: none;
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .scorecard-header {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            color: #ffffff;
+            padding: 20px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .scorecard-header h2 {
+            font-size: 21px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .scorecard-header p {
+            font-size: 13.5px;
+            color: #dbeafe;
+        }
+
+        .score-metrics {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 10px 18px;
+            border-radius: 12px;
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #dbeafe;
+            font-weight: 600;
+        }
+
+        .metric-val {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .scorecard-footer {
+            padding: 14px 24px;
+            background: var(--bg-subtle);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        /* Teacher Portal Navigation & Sub-modes */
+        .teacher-header-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 16px;
+        }
+
+        .sub-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .sub-tab-btn {
+            padding: 9px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: var(--bg-subtle);
+            color: var(--text-muted);
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .sub-tab-btn.active {
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+        }
+
+        .author-mode-switch {
+            display: inline-flex;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            gap: 4px;
+            margin-bottom: 18px;
+        }
+
+        .author-mode-btn {
+            padding: 7px 14px;
+            border-radius: 7px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .author-mode-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .builder-block {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .builder-block-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .file-drop-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: var(--bg-subtle);
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        /* Tables */
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg-subtle);
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pct-badge {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .pct-high { background: #dcfce7; color: #166534; }
+        .pct-mid { background: #fef3c7; color: #92400e; }
+        .pct-low { background: #fee2e2; color: #991b1b; }
+
+        /* Custom Modal Dialog (Replaces confirm() / alert()) */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 999;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            max-width: 420px;
+            width: 100%;
+            padding: 22px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .modal-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .modal-body {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 12.5px;
+            color: var(--text-light);
+            background: #ffffff;
+            border-top: 1px solid var(--border-light);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Configuration Notice Banner (Visible when placeholder Supabase credentials are present) -->
+    <div id="setupBanner" class="setup-banner hidden">
+        <strong>Supabase Setup Notice:</strong> Replace <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> at the top of the <code>&lt;script&gt;</code> block in <code>index.html</code> with your Supabase project credentials. Previewing in local Demo Mode until configured.
+    </div>
+
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+        <div class="header-inner">
+            <div class="brand">
+                <div class="brand-logo">SQ</div>
+                <div>
+                    <div class="brand-title">SmartQuiz Portal</div>
+                    <div class="brand-sub">Interactive Student Assessment & Teacher Dashboard</div>
+                </div>
+            </div>
+            <nav class="nav-tabs" aria-label="Portal Mode">
+                <button type="button" id="navStudentBtn" class="nav-tab-btn active" onclick="switchMainView('student')">
+                    Student Quiz
+                </button>
+                <button type="button" id="navTeacherBtn" class="nav-tab-btn" onclick="switchMainView('teacher')">
+                    Teacher Portal
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- =====================================================================
+             VIEW 1: STUDENT QUIZ VIEW
+             ===================================================================== -->
+        <div id="studentView" style="display: flex; flex-direction: column; gap: 18px;">
+
+            <!-- Summary Scorecard Banner (Shown after quiz submission) -->
+            <section id="studentScorecard" class="scorecard">
+                <div class="scorecard-header">
+                    <div>
+                        <h2 id="scorecardTitle">Quiz Results</h2>
+                        <p id="scorecardMissedSummary">Review your score and step-by-step explanations below.</p>
+                    </div>
+                    <div class="score-metrics">
+                        <div class="metric-item">
+                            <div class="metric-label">Score</div>
+                            <div class="metric-val" id="scorecardFraction">0 / 0</div>
+                        </div>
+                        <div style="width: 1px; height: 34px; background: rgba(255,255,255,0.25);"></div>
+                        <div class="metric-item">
+                            <div class="metric-label">Percentage</div>
+                            <div class="metric-val" id="scorecardPercent">0%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="scorecard-footer">
+                    <div id="scorecardDbStatus" style="font-size: 13px; color: var(--text-muted); font-weight: 500;">
+                        Preparing submission...
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <button type="button" id="copyResultBtn" class="btn btn-primary btn-sm" onclick="copyStudentResults()">
+                            Copy Results Summary
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="resetStudentQuiz()">
+                            Retake / Reset Quiz
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Selection, Student Details & Topic Filter -->
+            <section class="card">
+                <div class="section-title">Student Assessment</div>
+                <p class="section-subtitle">Select a quiz, enter your name, and type your final answer in each question's text box.</p>
+
+                <div class="grid-3">
+                    <div class="field">
+                        <label for="studentQuizSelect">Select Quiz</label>
+                        <select id="studentQuizSelect" class="select" onchange="handleStudentQuizChange()">
+                            <option value="">Loading quizzes...</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="studentNameInput">Student Name *</label>
+                        <input type="text" id="studentNameInput" class="input" placeholder="e.g., Ayesha Khan">
+                    </div>
+                    <div class="field">
+                        <label for="studentClassInput">Class / Section</label>
+                        <input type="text" id="studentClassInput" class="input" placeholder="e.g., Grade 8 - A">
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-top: 14px;">
+                    <div class="field">
+                        <label for="studentTopicFilter">Filter by Topic (Optional)</label>
+                        <select id="studentTopicFilter" class="select" onchange="applyStudentTopicFilter()">
+                            <option value="all">All Topics</option>
+                        </select>
+                    </div>
+                    <div class="field" style="justify-content: flex-end;">
+                        <div class="progress-row" style="margin-top: 0; padding-top: 0; border-top: none;">
+                            <div class="progress-label">
+                                Answered: <strong id="studentAnsweredCount">0</strong> / <strong id="studentTotalCount">0</strong>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" id="studentProgressFill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="studentAlertBox" class="alert alert-error hidden"></div>
+            </section>
+
+            <!-- Student Questions List -->
+            <form id="studentQuizForm" onsubmit="handleStudentQuizSubmit(event)">
+                <div id="studentQuestionsContainer" style="display: flex; flex-direction: column; gap: 14px;"></div>
+
+                <div id="studentSubmitCard" class="card hidden" style="margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px;">
+                    <div style="font-size: 13.5px; color: var(--text-muted);">
+                        Make sure all topics are answered before submitting. Unanswered questions are marked incorrect.
+                    </div>
+                    <button type="submit" id="studentSubmitBtn" class="btn btn-primary" style="padding: 12px 26px; font-size: 15px;">
+                        Submit Quiz
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- =====================================================================
+             VIEW 2: TEACHER PORTAL VIEW
+             ===================================================================== -->
+        <div id="teacherView" class="hidden" style="display: flex; flex-direction: column; gap: 18px;">
+
+            <!-- Teacher Login Card -->
+            <section id="teacherLoginCard" class="card" style="max-width: 460px; width: 100%; margin: 14px auto;">
+                <div class="section-title">Teacher Portal Sign In</div>
+                <p class="section-subtitle">Log in with your Supabase teacher email and password to manage quizzes and view student results.</p>
+
+                <form id="teacherLoginForm" onsubmit="handleTeacherLogin(event)" style="display: flex; flex-direction: column; gap: 14px;">
+                    <div class="field">
+                        <label for="teacherEmailInput">Email Address</label>
+                        <input type="email" id="teacherEmailInput" class="input" placeholder="teacher@school.edu" required>
+                    </div>
+                    <div class="field">
+                        <label for="teacherPasswordInput">Password</label>
+                        <input type="password" id="teacherPasswordInput" class="input" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" id="teacherLoginBtn" class="btn btn-primary" style="width: 100%; margin-top: 4px;">
+                        Sign In
+                    </button>
+                </form>
+
+                <div id="teacherLoginAlert" class="alert alert-error hidden"></div>
+            </section>
+
+            <!-- Authenticated Teacher Dashboard -->
+            <section id="teacherDashboard" class="card hidden">
+                <div class="teacher-header-bar">
+                    <div>
+                        <div class="section-title">Teacher Dashboard</div>
+                        <div style="font-size: 13px; color: var(--text-muted);">
+                            Signed in as <strong id="teacherEmailDisplay">teacher@school.edu</strong>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="handleTeacherLogout()">
+                        Sign Out
+                    </button>
+                </div>
+
+                <!-- Teacher Sub-Tabs -->
+                <div class="sub-tabs">
+                    <button type="button" id="subTabCreateBtn" class="sub-tab-btn active" onclick="switchTeacherSubTab('create')">
+                        Create Quiz
+                    </button>
+                    <button type="button" id="subTabManageBtn" class="sub-tab-btn" onclick="switchTeacherSubTab('manage')">
+                        Manage Quizzes
+                    </button>
+                    <button type="button" id="subTabResultsBtn" class="sub-tab-btn" onclick="switchTeacherSubTab('results')">
+                        Student Results
+                    </button>
+                </div>
+
+                <!-- SUB-TAB A: CREATE QUIZ (Manual Form + JSON Bulk Upload) -->
+                <div id="teacherSubTabCreate">
+                    <div class="author-mode-switch">
+                        <button type="button" id="modeManualBtn" class="author-mode-btn active" onclick="switchAuthorMode('manual')">
+                            Manual Form
+                        </button>
+                        <button type="button" id="modeJsonBtn" class="author-mode-btn" onclick="switchAuthorMode('json')">
+                            JSON Bulk Upload
+                        </button>
+                    </div>
+
+                    <!-- A1: Manual Form -->
+                    <div id="authorManualPane">
+                        <form id="manualQuizForm" onsubmit="handleManualQuizPublish(event)">
+                            <div class="grid-2" style="margin-bottom: 18px;">
+                                <div class="field">
+                                    <label for="manualQuizTitle">Quiz Title *</label>
+                                    <input type="text" id="manualQuizTitle" class="input" placeholder="e.g., Grade 8 Ratio & Proportion" required>
+                                </div>
+                                <div class="field">
+                                    <label for="manualQuizGrade">Grade / Subject</label>
+                                    <input type="text" id="manualQuizGrade" class="input" placeholder="e.g., Grade 8 Mathematics">
+                                </div>
+                            </div>
+
+                            <div style="font-size: 14px; font-weight: 800; margin-bottom: 10px; color: var(--text-main);">
+                                Questions
+                            </div>
+
+                            <div id="manualQuestionsContainer"></div>
+
+                            <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light);">
+                                <button type="button" class="btn btn-secondary" onclick="addManualQuestionBlock()">
+                                    + Add Question
+                                </button>
+                                <button type="submit" id="manualPublishBtn" class="btn btn-primary">
+                                    Publish Quiz
+                                </button>
+                            </div>
+
+                            <div id="manualPublishAlert" class="alert hidden"></div>
+                        </form>
+                    </div>
+
+                    <!-- A2: JSON Bulk Upload -->
+                    <div id="authorJsonPane" class="hidden">
+                        <p class="section-subtitle" style="margin-bottom: 12px;">
+                            Upload a <code>.json</code> file or paste JSON below to publish one or multiple quizzes at once. Supports single quiz format (<code>{"title": "...", "questions": [...]}</code>) or batch format (<code>{"quizzes": [...]}</code>).
+                        </p>
+
+                        <div class="file-drop-bar">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <label for="jsonFileInput" style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-light);">
+                                    Upload .JSON File
+                                </label>
+                                <input type="file" id="jsonFileInput" accept=".json,application/json" onchange="handleJsonFileUpload(event)" style="font-size: 13.5px;">
+                            </div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="loadSampleJsonIntoEditor()">
+                                    Load Sample into Editor
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="downloadSampleJsonFile()">
+                                    Download Sample JSON
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="jsonEditorTextarea">Quiz JSON Payload</label>
+                            <textarea id="jsonEditorTextarea" class="textarea json-editor" placeholder='Paste JSON here or click "Load Sample into Editor"...'></textarea>
+                        </div>
+
+                        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 14px;">
+                            <button type="button" class="btn btn-secondary" onclick="clearJsonEditor()">
+                                Clear Editor
+                            </button>
+                            <button type="button" id="jsonUploadSubmitBtn" class="btn btn-primary" onclick="handleJsonBulkUpload()">
+                                Validate & Upload JSON Quiz
+                            </button>
+                        </div>
+
+                        <div id="jsonUploadAlert" class="alert hidden"></div>
+                    </div>
+                </div>
+
+                <!-- SUB-TAB B: MANAGE QUIZZES -->
+                <div id="teacherSubTabManage" class="hidden">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                        <div style="font-size: 13.5px; color: var(--text-muted);">
+                            Manage all published quizzes. Deleting a quiz also removes its questions and student submissions.
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="loadTeacherQuizzesTable()">
+                            Refresh Quizzes
+                        </button>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Quiz Title</th>
+                                    <th>Grade / Subject</th>
+                                    <th>Questions</th>
+                                    <th>Created Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="manageQuizzesTbody">
+                                <tr><td colspan="5" style="text-align: center; color: var(--text-light);">Loading quizzes...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="manageQuizzesAlert" class="alert hidden"></div>
+                </div>
+
+                <!-- SUB-TAB C: STUDENT RESULTS -->
+                <div id="teacherSubTabResults" class="hidden">
+                    <div class="grid-3" style="margin-bottom: 14px; align-items: end;">
+                        <div class="field">
+                            <label for="resultsQuizFilter">Filter by Quiz</label>
+                            <select id="resultsQuizFilter" class="select" onchange="renderFilteredResultsTable()">
+                                <option value="all">All Quizzes</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="resultsStudentSearch">Search Student Name</label>
+                            <input type="text" id="resultsStudentSearch" class="input" placeholder="Type student name..." oninput="renderFilteredResultsTable()">
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="loadTeacherSubmissionsTable()">
+                                Refresh
+                            </button>
+                            <button type="button" class="btn btn-success btn-sm" onclick="exportSubmissionsCsv()">
+                                Export CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Class / Section</th>
+                                    <th>Quiz Title</th>
+                                    <th>Score</th>
+                                    <th>Percentage</th>
+                                    <th>Missed Topics</th>
+                                    <th>Submitted Date/Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentResultsTbody">
+                                <tr><td colspan="7" style="text-align: center; color: var(--text-light);">Loading results...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="resultsTableAlert" class="alert hidden"></div>
+                </div>
+
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Custom Confirmation Modal (Avoids native confirm()) -->
+    <div id="confirmModal" class="modal-backdrop hidden">
+        <div class="modal-card">
+            <div class="modal-title" id="confirmModalTitle">Confirm Action</div>
+            <div class="modal-body" id="confirmModalMessage">Are you sure you want to proceed?</div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closeConfirmModal()">Cancel</button>
+                <button type="button" id="confirmModalActionBtn" class="btn btn-danger btn-sm">Delete Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        SmartQuiz Portal • Hosted on GitHub Pages & Backed by Supabase
+    </footer>
+
+    <script>
+        // =========================================================================
+        // 1. SUPABASE CONFIGURATION
+        // =========================================================================
+        const SUPABASE_URL = 'https://lvljczhcbievuycnnfae.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_MvN5Fz0MstQDIWi3c8db7w_RpNs7wGj';
+
+        const isConfigured =
+            Boolean(SUPABASE_URL) &&
+            Boolean(SUPABASE_ANON_KEY) &&
+            !SUPABASE_URL.includes('YOUR_SUPABASE_URL') &&
+            !SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY');
+
+        const supabaseClient = isConfigured
+            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+            : null;
+
+        // =========================================================================
+        // 2. SAMPLE & DEMO DATA (Grade 8 Ratio & Proportion)
+        // =========================================================================
+        const SAMPLE_QUIZ_JSON = {
+            title: "Grade 8 Ratio & Proportion Mastery",
+            grade: "Grade 8 Mathematics",
+            questions: [
+                {
+                    topic: "Simplifying Ratios",
+                    question: "Simplify the ratio 36 : 48 to its lowest terms.",
+                    accepted_answers: ["3:4", "3 : 4"],
+                    display_answer: "3:4",
+                    explanation: "Divide both terms by their greatest common divisor (12): 36 ÷ 12 = 3 and 48 ÷ 12 = 4."
+                },
+                {
+                    topic: "Ratios with Units",
+                    question: "Write the ratio of 45 minutes to 2 hours in simplest form.",
+                    accepted_answers: ["3:8", "3 : 8"],
+                    display_answer: "3:8",
+                    explanation: "Convert 2 hours to 120 minutes. Simplify 45 : 120 by dividing both by 15 to get 3:8."
+                },
+                {
+                    topic: "Solving Proportions",
+                    question: "Solve for x in the proportion: 5 / 8 = x / 32",
+                    accepted_answers: ["20", "x=20", "x = 20"],
+                    display_answer: "20",
+                    explanation: "Cross-multiply: 8x = 5 × 32 = 160. Divide both sides by 8 to get x = 20."
+                },
+                {
+                    topic: "Direct Proportion",
+                    question: "A car travels 240 km in 4 hours at constant speed. How many kilometers will it travel in 7 hours?",
+                    accepted_answers: ["420", "420km", "420 km"],
+                    display_answer: "420",
+                    explanation: "Unit speed = 240 ÷ 4 = 60 km/h. In 7 hours, distance = 60 × 7 = 420 km."
+                },
+                {
+                    topic: "Inverse Proportion",
+                    question: "If 6 workers can build a wall in 10 days, how many days will 15 workers take at the same rate?",
+                    accepted_answers: ["4", "4days", "4 days"],
+                    display_answer: "4",
+                    explanation: "More workers take fewer days (inverse variation): 6 × 10 = 15 × d → 60 = 15d → d = 4 days."
+                }
+            ]
+        };
+
+        const DEMO_QUIZZES = [
+            {
+                id: "demo-g8-ratio",
+                title: SAMPLE_QUIZ_JSON.title + " (Demo)",
+                grade: SAMPLE_QUIZ_JSON.grade,
+                created_at: new Date().toISOString(),
+                questions: SAMPLE_QUIZ_JSON.questions.map((q, idx) => ({
+                    id: `demo-q-${idx + 1}`,
+                    sort_order: idx + 1,
+                    ...q
+                }))
+            }
+        ];
+
+        // =========================================================================
+        // 3. APPLICATION STATE
+        // =========================================================================
+        let quizzesList = [];
+        let currentQuiz = null;
+        let currentQuestions = [];
+        let userTypedAnswers = {}; // Keyed by question index to preserve across topic filter changes
+        let isQuizSubmitted = false;
+        let lastResultSummary = null;
+        let cachedSubmissions = [];
+        let manualBlockCounter = 0;
+
+        // =========================================================================
+        // 4. INITIALIZATION & AUTH STATE LISTENER
+        // =========================================================================
+        window.addEventListener("DOMContentLoaded", async () => {
+            if (!isConfigured) {
+                document.getElementById("setupBanner").classList.remove("hidden");
+            }
+
+            // Initialize 2 blank question blocks in Manual Form
+            addManualQuestionBlock();
+            addManualQuestionBlock();
+
+            // Load quizzes for Student View
+            await fetchAvailableQuizzes();
+
+            // Restore & listen for Supabase Auth session
+            if (supabaseClient) {
+                try {
+                    const { data } = await supabaseClient.auth.getSession();
+                    if (data && data.session) {
+                        enterTeacherDashboard(data.session.user);
+                    }
+
+                    supabaseClient.auth.onAuthStateChange((_event, session) => {
+                        if (session && session.user) {
+                            enterTeacherDashboard(session.user);
+                        } else {
+                            exitTeacherDashboard();
+                        }
+                    });
+                } catch (err) {
+                    console.error("Auth session check error:", err);
+                }
+            }
+        });
+
+        function switchMainView(viewName) {
+            const isStudent = viewName === "student";
+            document.getElementById("studentView").classList.toggle("hidden", !isStudent);
+            document.getElementById("teacherView").classList.toggle("hidden", isStudent);
+            document.getElementById("navStudentBtn").classList.toggle("active", isStudent);
+            document.getElementById("navTeacherBtn").classList.toggle("active", !isStudent);
+        }
+
+        function normalizeAnswer(raw) {
+            if (raw === null || raw === undefined) return "";
+            return raw
+                .toString()
+                .trim()
+                .toLowerCase()
+                .replace(/\.+$/, "")
+                .replace(/\s+/g, "");
+        }
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return "";
+            return str
+                .toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function showAlert(elementId, type, message) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.className = `alert alert-${type}`;
+            el.textContent = message;
+            el.classList.remove("hidden");
+        }
+
+        function hideAlert(elementId) {
+            const el = document.getElementById(elementId);
+            if (el) el.classList.add("hidden");
+        }
+
+        // =========================================================================
+        // 5. STUDENT QUIZ VIEW LOGIC
+        // =========================================================================
+        async function fetchAvailableQuizzes() {
+            const select = document.getElementById("studentQuizSelect");
+            hideAlert("studentAlertBox");
+            select.innerHTML = `<option value="">Loading quizzes...</option>`;
+
+            if (!supabaseClient) {
+                quizzesList = JSON.parse(JSON.stringify(DEMO_QUIZZES));
+                populateStudentQuizSelect();
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("quizzes")
+                    .select("id, title, grade, created_at")
+                    .order("created_at", { ascending: false });
+
+                if (error) throw error;
+
+                quizzesList = data || [];
+                populateStudentQuizSelect();
+            } catch (err) {
+                console.error("Failed to fetch quizzes:", err);
+                showAlert("studentAlertBox", "error", `Error loading quizzes from Supabase: ${err.message}. Loaded Demo Quiz instead.`);
+                quizzesList = JSON.parse(JSON.stringify(DEMO_QUIZZES));
+                populateStudentQuizSelect();
+            }
+        }
+
+        function populateStudentQuizSelect() {
+            const select = document.getElementById("studentQuizSelect");
+            select.innerHTML = "";
+
+            if (quizzesList.length === 0) {
+                select.innerHTML = `<option value="">No quizzes published yet</option>`;
+                currentQuiz = null;
+                currentQuestions = [];
+                renderStudentQuestionCards();
+                return;
+            }
+
+            quizzesList.forEach((quiz) => {
+                const option = document.createElement("option");
+                option.value = quiz.id;
+                option.textContent = quiz.grade ? `${quiz.title} (${quiz.grade})` : quiz.title;
+                select.appendChild(option);
+            });
+
+            handleStudentQuizChange();
+        }
+
+        async function handleStudentQuizChange() {
+            const quizId = document.getElementById("studentQuizSelect").value;
+            const container = document.getElementById("studentQuestionsContainer");
+            const submitCard = document.getElementById("studentSubmitCard");
+
+            isQuizSubmitted = false;
+            userTypedAnswers = {};
+            lastResultSummary = null;
+            hideAlert("studentAlertBox");
+
+            document.getElementById("studentScorecard").style.display = "none";
+            document.getElementById("studentNameInput").disabled = false;
+            document.getElementById("studentClassInput").disabled = false;
+
+            if (!quizId) {
+                currentQuiz = null;
+                currentQuestions = [];
+                populateTopicFilterDropdown();
+                renderStudentQuestionCards();
+                return;
+            }
+
+            currentQuiz = quizzesList.find((q) => q.id === quizId) || null;
+            container.innerHTML = `<div class="card" style="text-align:center; color: var(--text-light);">Loading questions...</div>`;
+            submitCard.classList.add("hidden");
+
+            if (!supabaseClient || quizId.startsWith("demo-")) {
+                currentQuestions = currentQuiz ? currentQuiz.questions : [];
+                populateTopicFilterDropdown();
+                renderStudentQuestionCards();
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("questions")
+                    .select("*")
+                    .eq("quiz_id", quizId)
+                    .order("sort_order", { ascending: true });
+
+                if (error) throw error;
+
+                currentQuestions = data || [];
+                populateTopicFilterDropdown();
+                renderStudentQuestionCards();
+            } catch (err) {
+                console.error("Failed to fetch questions:", err);
+                container.innerHTML = "";
+                showAlert("studentAlertBox", "error", `Could not load questions: ${err.message}`);
+            }
+        }
+
+        function populateTopicFilterDropdown() {
+            const topicSelect = document.getElementById("studentTopicFilter");
+            const topics = new Set();
+            currentQuestions.forEach((q) => {
+                if (q.topic && q.topic.trim() !== "") {
+                    topics.add(q.topic.trim());
+                }
+            });
+
+            topicSelect.innerHTML = `<option value="all">All Topics (${currentQuestions.length} Questions)</option>`;
+            topics.forEach((topic) => {
+                const opt = document.createElement("option");
+                opt.value = topic;
+                opt.textContent = topic;
+                topicSelect.appendChild(opt);
+            });
+        }
+
+        function renderStudentQuestionCards() {
+            const container = document.getElementById("studentQuestionsContainer");
+            const submitCard = document.getElementById("studentSubmitCard");
+            container.innerHTML = "";
+
+            if (currentQuestions.length === 0) {
+                container.innerHTML = `<div class="card" style="text-align:center; color: var(--text-light);">No questions found for this quiz.</div>`;
+                submitCard.classList.add("hidden");
+                updateStudentProgressBar();
+                return;
+            }
+
+            currentQuestions.forEach((q, idx) => {
+                const card = document.createElement("div");
+                card.className = "q-card";
+                card.id = `qCard-${idx}`;
+                card.dataset.topic = q.topic ? q.topic.trim() : "";
+
+                const savedVal = userTypedAnswers[idx] || "";
+                const topicHtml = q.topic
+                    ? `<span class="q-topic-badge">${escapeHtml(q.topic)}</span>`
+                    : "";
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="q-meta">
+                            <span class="q-num">Q${idx + 1}</span>
+                            ${topicHtml}
+                        </div>
+                        <span id="qStatusPill-${idx}" class="q-status-pill"></span>
+                    </div>
+                    <div class="q-text">${escapeHtml(q.question)}</div>
+                    <div class="q-input-row">
+                        <label for="qInput-${idx}">Your Answer:</label>
+                        <input
+                            type="text"
+                            id="qInput-${idx}"
+                            class="q-answer-input"
+                            autocomplete="off"
+                            placeholder="Type your answer..."
+                            value="${escapeHtml(savedVal)}"
+                            oninput="handleStudentAnswerInput(${idx}, this.value)"
+                        >
+                    </div>
+                    <div id="qFeedback-${idx}" class="q-feedback">
+                        <div style="font-weight: 700; color: #991b1b; margin-bottom: 5px;">
+                            Correct Answer: <span class="ans-pill">${escapeHtml(q.display_answer)}</span>
+                        </div>
+                        <div style="color: #334155;">
+                            <strong>Explanation:</strong> ${escapeHtml(q.explanation || "Review the steps for this problem.")}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            if (!isQuizSubmitted) {
+                submitCard.classList.remove("hidden");
+            }
+            applyStudentTopicFilter();
+            updateStudentProgressBar();
+        }
+
+        function handleStudentAnswerInput(idx, val) {
+            userTypedAnswers[idx] = val;
+            updateStudentProgressBar();
+        }
+
+        function applyStudentTopicFilter() {
+            const selectedTopic = document.getElementById("studentTopicFilter").value;
+            currentQuestions.forEach((q, idx) => {
+                const card = document.getElementById(`qCard-${idx}`);
+                if (!card) return;
+                const cardTopic = q.topic ? q.topic.trim() : "";
+                const visible = selectedTopic === "all" || cardTopic === selectedTopic;
+                card.classList.toggle("hidden", !visible);
+            });
+        }
+
+        function updateStudentProgressBar() {
+            const total = currentQuestions.length;
+            let answered = 0;
+            for (let i = 0; i < total; i++) {
+                if (userTypedAnswers[i] && userTypedAnswers[i].trim() !== "") {
+                    answered++;
+                }
+            }
+
+            document.getElementById("studentAnsweredCount").textContent = answered;
+            document.getElementById("studentTotalCount").textContent = total;
+            const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+            document.getElementById("studentProgressFill").style.width = `${pct}%`;
+        }
+
+        async function handleStudentQuizSubmit(event) {
+            event.preventDefault();
+            if (isQuizSubmitted || currentQuestions.length === 0) return;
+
+            const studentName = document.getElementById("studentNameInput").value.trim();
+            const classSection = document.getElementById("studentClassInput").value.trim();
+
+            if (!studentName) {
+                showAlert("studentAlertBox", "error", "Please enter your Student Name before submitting.");
+                document.getElementById("studentNameInput").focus();
+                return;
+            }
+
+            hideAlert("studentAlertBox");
+            isQuizSubmitted = true;
+
+            // Show all topics during post-submit review
+            document.getElementById("studentTopicFilter").value = "all";
+            applyStudentTopicFilter();
+
+            let score = 0;
+            const missedTopicsSet = new Set();
+            const missedQuestionNumbers = [];
+
+            currentQuestions.forEach((q, idx) => {
+                const card = document.getElementById(`qCard-${idx}`);
+                const input = document.getElementById(`qInput-${idx}`);
+                const statusPill = document.getElementById(`qStatusPill-${idx}`);
+                const feedback = document.getElementById(`qFeedback-${idx}`);
+
+                const rawUserAns = userTypedAnswers[idx] || "";
+                const normUserAns = normalizeAnswer(rawUserAns);
+
+                const validAnswers = Array.isArray(q.accepted_answers) && q.accepted_answers.length > 0
+                    ? q.accepted_answers.map((a) => normalizeAnswer(a))
+                    : [normalizeAnswer(q.display_answer)];
+
+                if (q.display_answer) {
+                    validAnswers.push(normalizeAnswer(q.display_answer));
+                }
+
+                const isCorrect = normUserAns !== "" && validAnswers.includes(normUserAns);
+                input.disabled = true;
+
+                if (isCorrect) {
+                    score++;
+                    card.classList.add("is-correct");
+                    input.classList.add("input-correct");
+                    statusPill.textContent = "✓ Correct";
+                    statusPill.classList.add("correct");
+                } else {
+                    card.classList.add("is-incorrect");
+                    input.classList.add("input-incorrect");
+                    if (rawUserAns.trim() === "") {
+                        input.value = "(Unanswered)";
+                    }
+                    statusPill.textContent = "✕ Incorrect";
+                    statusPill.classList.add("incorrect");
+                    feedback.style.display = "block";
+
+                    missedQuestionNumbers.push(`Q${idx + 1}`);
+                    if (q.topic && q.topic.trim() !== "") {
+                        missedTopicsSet.add(q.topic.trim());
+                    }
+                }
+            });
+
+            const total = currentQuestions.length;
+            const percentage = Math.round((score / total) * 100);
+            const missedTopicsArr = Array.from(missedTopicsSet);
+
+            lastResultSummary = {
+                studentName,
+                classSection: classSection || "Not specified",
+                quizTitle: currentQuiz ? currentQuiz.title : "Quiz",
+                score,
+                total,
+                percentage,
+                missedQuestionNumbers,
+                missedTopics: missedTopicsArr
+            };
+
+            document.getElementById("studentNameInput").disabled = true;
+            document.getElementById("studentClassInput").disabled = true;
+            document.getElementById("studentSubmitCard").classList.add("hidden");
+
+            document.getElementById("scorecardTitle").textContent = classSection
+                ? `${studentName} (${classSection})`
+                : `${studentName}'s Results`;
+            document.getElementById("scorecardFraction").textContent = `${score} / ${total}`;
+            document.getElementById("scorecardPercent").textContent = `${percentage}%`;
+            document.getElementById("scorecardMissedSummary").textContent = missedTopicsArr.length > 0
+                ? `Topics to review: ${missedTopicsArr.join(", ")}`
+                : "Great job! Review your graded responses below.";
+
+            document.getElementById("studentScorecard").style.display = "block";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            // Save submission to Supabase
+            const dbStatusEl = document.getElementById("scorecardDbStatus");
+            if (!supabaseClient || (currentQuiz && currentQuiz.id.startsWith("demo-"))) {
+                dbStatusEl.textContent = "Demo Mode: Graded locally. Configure Supabase keys to store results in your database.";
+                return;
+            }
+
+            dbStatusEl.textContent = "Saving result to Supabase...";
+            try {
+                const { error } = await supabaseClient.from("submissions").insert([
+                    {
+                        quiz_id: currentQuiz.id,
+                        student_name: studentName,
+                        class_section: classSection || null,
+                        score: score,
+                        total: total,
+                        percentage: percentage,
+                        missed_topics: missedTopicsArr
+                    }
+                ]);
+
+                if (error) throw error;
+                dbStatusEl.innerHTML = `<span style="color: var(--success); font-weight: 700;">✓ Submission saved to teacher gradebook!</span>`;
+            } catch (err) {
+                console.error("Submission save failed:", err);
+                dbStatusEl.innerHTML = `<span style="color: var(--danger); font-weight: 700;">⚠ Could not save online (${escapeHtml(err.message)}). Use "Copy Results Summary" to share with your teacher.</span>`;
+            }
+        }
+
+        function copyStudentResults() {
+            if (!lastResultSummary) return;
+            const r = lastResultSummary;
+            const lines = [
+                `📊 ${r.quizTitle} — Quiz Result`,
+                `👤 Student: ${r.studentName}`,
+                `🏫 Class/Section: ${r.classSection}`,
+                `✅ Score: ${r.score} / ${r.total} (${r.percentage}%)`,
+                r.missedQuestionNumbers.length > 0
+                    ? `❌ Missed Questions: ${r.missedQuestionNumbers.join(", ")}`
+                    : "🌟 All questions answered correctly!",
+                r.missedTopics.length > 0
+                    ? `📌 Topics to Review: ${r.missedTopics.join(", ")}`
+                    : ""
+            ].filter(Boolean);
+
+            const textarea = document.createElement("textarea");
+            textarea.value = lines.join("\n");
+            textarea.style.position = "fixed";
+            textarea.style.left = "-9999px";
+            document.body.appendChild(textarea);
+            textarea.select();
+
+            try {
+                document.execCommand("copy");
+                const btn = document.getElementById("copyResultBtn");
+                btn.textContent = "✓ Copied!";
+                btn.classList.remove("btn-primary");
+                btn.classList.add("btn-success");
+                setTimeout(() => {
+                    btn.textContent = "Copy Results Summary";
+                    btn.classList.remove("btn-success");
+                    btn.classList.add("btn-primary");
+                }, 2500);
+            } catch (err) {
+                console.error("Clipboard copy error:", err);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        function resetStudentQuiz() {
+            handleStudentQuizChange();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // =========================================================================
+        // 6. TEACHER PORTAL: AUTHENTICATION & SUB-TABS
+        // =========================================================================
+        async function handleTeacherLogin(event) {
+            event.preventDefault();
+            hideAlert("teacherLoginAlert");
+            const loginBtn = document.getElementById("teacherLoginBtn");
+
+            if (!supabaseClient) {
+                showAlert("teacherLoginAlert", "error", "Supabase is not configured. Add SUPABASE_URL and SUPABASE_ANON_KEY in index.html first.");
+                return;
+            }
+
+            const email = document.getElementById("teacherEmailInput").value.trim();
+            const password = document.getElementById("teacherPasswordInput").value;
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = "Signing in...";
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                enterTeacherDashboard(data.user);
+            } catch (err) {
+                showAlert("teacherLoginAlert", "error", `Login failed: ${err.message}`);
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = "Sign In";
+            }
+        }
+
+        function enterTeacherDashboard(user) {
+            document.getElementById("teacherLoginCard").classList.add("hidden");
+            document.getElementById("teacherDashboard").classList.remove("hidden");
+            document.getElementById("teacherEmailDisplay").textContent = user.email || "Teacher";
+        }
+
+        function exitTeacherDashboard() {
+            document.getElementById("teacherDashboard").classList.add("hidden");
+            document.getElementById("teacherLoginCard").classList.remove("hidden");
+            document.getElementById("teacherPasswordInput").value = "";
+        }
+
+        async function handleTeacherLogout() {
+            try {
+                if (supabaseClient) {
+                    await supabaseClient.auth.signOut();
+                }
+            } catch (err) {
+                console.error("Sign out error:", err);
+            }
+            exitTeacherDashboard();
+        }
+
+        function switchTeacherSubTab(tab) {
+            const map = {
+                create: ["teacherSubTabCreate", "subTabCreateBtn"],
+                manage: ["teacherSubTabManage", "subTabManageBtn"],
+                results: ["teacherSubTabResults", "subTabResultsBtn"]
+            };
+
+            Object.entries(map).forEach(([key, [paneId, btnId]]) => {
+                document.getElementById(paneId).classList.toggle("hidden", key !== tab);
+                document.getElementById(btnId).classList.toggle("active", key === tab);
+            });
+
+            if (tab === "manage") {
+                loadTeacherQuizzesTable();
+            } else if (tab === "results") {
+                loadTeacherSubmissionsTable();
+            }
+        }
+
+        function switchAuthorMode(mode) {
+            const isManual = mode === "manual";
+            document.getElementById("authorManualPane").classList.toggle("hidden", !isManual);
+            document.getElementById("authorJsonPane").classList.toggle("hidden", isManual);
+            document.getElementById("modeManualBtn").classList.toggle("active", isManual);
+            document.getElementById("modeJsonBtn").classList.toggle("active", !isManual);
+        }
+
+        // =========================================================================
+        // 7A. TEACHER CREATE QUIZ: MANUAL FORM BUILDER
+        // =========================================================================
+        function addManualQuestionBlock() {
+            manualBlockCounter++;
+            const id = manualBlockCounter;
+            const container = document.getElementById("manualQuestionsContainer");
+
+            const block = document.createElement("div");
+            block.className = "builder-block";
+            block.id = `manualBlock-${id}`;
+            block.innerHTML = `
+                <div class="builder-block-top">
+                    <strong class="block-label" style="font-size: 14px;">Question</strong>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="removeManualQuestionBlock(${id})">
+                        Remove
+                    </button>
+                </div>
+                <div class="grid-2" style="margin-bottom: 12px;">
+                    <div class="field">
+                        <label>Topic</label>
+                        <input type="text" class="input m-topic" placeholder="e.g., Simplifying Ratios">
+                    </div>
+                    <div class="field">
+                        <label>Display Answer *</label>
+                        <input type="text" class="input m-display" placeholder="e.g., 3:4" required>
+                    </div>
+                </div>
+                <div class="field" style="margin-bottom: 12px;">
+                    <label>Question Text *</label>
+                    <textarea class="textarea m-question" placeholder="Enter the question prompt..." required></textarea>
+                </div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label>Accepted Answers (Comma-Separated) *</label>
+                        <input type="text" class="input m-accepted" placeholder="e.g., 3:4, 3 : 4" required>
+                    </div>
+                    <div class="field">
+                        <label>Step-by-Step Explanation</label>
+                        <input type="text" class="input m-explanation" placeholder="Shown if the student answers incorrectly...">
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(block);
+            renumberManualBlocks();
+        }
+
+        function removeManualQuestionBlock(id) {
+            const container = document.getElementById("manualQuestionsContainer");
+            if (container.children.length <= 1) {
+                showAlert("manualPublishAlert", "error", "A quiz must contain at least 1 question.");
+                return;
+            }
+            const el = document.getElementById(`manualBlock-${id}`);
+            if (el) el.remove();
+            renumberManualBlocks();
+        }
+
+        function renumberManualBlocks() {
+            const blocks = document.querySelectorAll("#manualQuestionsContainer .builder-block");
+            blocks.forEach((block, i) => {
+                const label = block.querySelector(".block-label");
+                if (label) label.textContent = `Question #${i + 1}`;
+            });
+        }
+
+        function parseAcceptedAnswersInput(raw) {
+            if (Array.isArray(raw)) {
+                return raw.map((item) => String(item).trim()).filter(Boolean);
+            }
+            if (typeof raw === "string") {
+                const delimiter = raw.includes("|") ? "|" : ",";
+                return raw.split(delimiter).map((item) => item.trim()).filter(Boolean);
+            }
+            return [];
+        }
+
+        async function insertQuizWithQuestions(quizObj, userId) {
+            const { data: insertedQuiz, error: quizErr } = await supabaseClient
+                .from("quizzes")
+                .insert([
+                    {
+                        title: quizObj.title,
+                        grade: quizObj.grade || null,
+                        created_by: userId || null
+                    }
+                ])
+                .select()
+                .single();
+
+            if (quizErr) throw quizErr;
+
+            const questionRows = quizObj.questions.map((q, idx) => ({
+                quiz_id: insertedQuiz.id,
+                topic: q.topic || null,
+                question: q.question,
+                accepted_answers: q.accepted_answers,
+                display_answer: q.display_answer,
+                explanation: q.explanation || null,
+                sort_order: idx + 1
+            }));
+
+            const { error: qErr } = await supabaseClient
+                .from("questions")
+                .insert(questionRows);
+
+            if (qErr) throw qErr;
+            return insertedQuiz;
+        }
+
+        async function handleManualQuizPublish(event) {
+            event.preventDefault();
+            hideAlert("manualPublishAlert");
+            const btn = document.getElementById("manualPublishBtn");
+
+            if (!supabaseClient) {
+                showAlert("manualPublishAlert", "error", "Supabase is not configured yet. Add your URL and Anon Key first.");
+                return;
+            }
+
+            const title = document.getElementById("manualQuizTitle").value.trim();
+            const grade = document.getElementById("manualQuizGrade").value.trim();
+            const blocks = document.querySelectorAll("#manualQuestionsContainer .builder-block");
+
+            if (!title || blocks.length === 0) return;
+
+            const questions = [];
+            blocks.forEach((block) => {
+                const topic = block.querySelector(".m-topic").value.trim();
+                const question = block.querySelector(".m-question").value.trim();
+                const displayAnswer = block.querySelector(".m-display").value.trim();
+                const acceptedRaw = block.querySelector(".m-accepted").value;
+                const explanation = block.querySelector(".m-explanation").value.trim();
+
+                const acceptedList = parseAcceptedAnswersInput(acceptedRaw);
+                if (displayAnswer && !acceptedList.some((a) => normalizeAnswer(a) === normalizeAnswer(displayAnswer))) {
+                    acceptedList.push(displayAnswer);
+                }
+
+                questions.push({
+                    topic,
+                    question,
+                    accepted_answers: acceptedList,
+                    display_answer: displayAnswer,
+                    explanation
+                });
+            });
+
+            btn.disabled = true;
+            btn.textContent = "Publishing...";
+
+            try {
+                const { data: userData } = await supabaseClient.auth.getUser();
+                const userId = userData && userData.user ? userData.user.id : null;
+
+                await insertQuizWithQuestions({ title, grade, questions }, userId);
+
+                showAlert("manualPublishAlert", "success", `✓ Published "${title}" (${questions.length} questions) to Supabase!`);
+                document.getElementById("manualQuizForm").reset();
+                document.getElementById("manualQuestionsContainer").innerHTML = "";
+                manualBlockCounter = 0;
+                addManualQuestionBlock();
+
+                await fetchAvailableQuizzes();
+            } catch (err) {
+                console.error("Manual publish error:", err);
+                showAlert("manualPublishAlert", "error", `Failed to publish quiz: ${err.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Publish Quiz";
+            }
+        }
+
+        // =========================================================================
+        // 7B. TEACHER CREATE QUIZ: JSON BULK UPLOAD
+        // =========================================================================
+        function handleJsonFileUpload(event) {
+            hideAlert("jsonUploadAlert");
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById("jsonEditorTextarea").value = e.target.result;
+                showAlert("jsonUploadAlert", "info", `Loaded "${file.name}" into editor. Review and click "Validate & Upload JSON Quiz".`);
+            };
+            reader.onerror = () => {
+                showAlert("jsonUploadAlert", "error", "Failed to read the selected JSON file.");
+            };
+            reader.readAsText(file);
+        }
+
+        function loadSampleJsonIntoEditor() {
+            hideAlert("jsonUploadAlert");
+            document.getElementById("jsonEditorTextarea").value = JSON.stringify(SAMPLE_QUIZ_JSON, null, 2);
+            showAlert("jsonUploadAlert", "info", "Sample Grade 8 Ratio & Proportion JSON loaded. You can edit it or upload directly.");
+        }
+
+        function downloadSampleJsonFile() {
+            const jsonText = JSON.stringify(SAMPLE_QUIZ_JSON, null, 2);
+            const blob = new Blob([jsonText], { type: "application/json;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "sample_quiz.json");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function clearJsonEditor() {
+            document.getElementById("jsonEditorTextarea").value = "";
+            document.getElementById("jsonFileInput").value = "";
+            hideAlert("jsonUploadAlert");
+        }
+
+        function validateAndNormalizeJsonPayload(parsed) {
+            if (!parsed || typeof parsed !== "object") {
+                throw new Error("Root JSON must be an object.");
+            }
+
+            // Support either { "quizzes": [ ... ] } or a single quiz { "title": "...", "questions": [ ... ] }
+            const rawQuizzes = Array.isArray(parsed.quizzes) ? parsed.quizzes : [parsed];
+            if (rawQuizzes.length === 0) {
+                throw new Error("No quizzes found in JSON payload.");
+            }
+
+            const normalizedQuizzes = rawQuizzes.map((quiz, qIdx) => {
+                const label = `Quiz #${qIdx + 1}`;
+                if (!quiz || typeof quiz !== "object") {
+                    throw new Error(`${label} must be a JSON object.`);
+                }
+                if (!quiz.title || typeof quiz.title !== "string" || quiz.title.trim() === "") {
+                    throw new Error(`${label} is missing a required non-empty "title".`);
+                }
+                if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) {
+                    throw new Error(`"${quiz.title}" must include a non-empty "questions" array.`);
+                }
+
+                const cleanQuestions = quiz.questions.map((item, idx) => {
+                    const qLabel = `"${quiz.title}" → Question #${idx + 1}`;
+                    if (!item || typeof item !== "object") {
+                        throw new Error(`${qLabel} must be an object.`);
+                    }
+                    if (!item.question || typeof item.question !== "string" || item.question.trim() === "") {
+                        throw new Error(`${qLabel} is missing a required "question" text.`);
+                    }
+
+                    const rawAccepted = item.accepted_answers !== undefined ? item.accepted_answers : item.acceptedAnswers;
+                    const acceptedList = parseAcceptedAnswersInput(rawAccepted);
+
+                    let displayAns = item.display_answer !== undefined ? item.display_answer : item.displayAnswer;
+                    displayAns = displayAns !== undefined && displayAns !== null ? String(displayAns).trim() : "";
+
+                    if (!displayAns && acceptedList.length > 0) {
+                        displayAns = acceptedList[0];
+                    }
+                    if (!displayAns) {
+                        throw new Error(`${qLabel} must provide "display_answer" and/or "accepted_answers".`);
+                    }
+
+                    if (!acceptedList.some((a) => normalizeAnswer(a) === normalizeAnswer(displayAns))) {
+                        acceptedList.push(displayAns);
+                    }
+
+                    return {
+                        topic: item.topic ? String(item.topic).trim() : "",
+                        question: item.question.trim(),
+                        accepted_answers: acceptedList,
+                        display_answer: displayAns,
+                        explanation: item.explanation ? String(item.explanation).trim() : ""
+                    };
+                });
+
+                return {
+                    title: quiz.title.trim(),
+                    grade: quiz.grade ? String(quiz.grade).trim() : "",
+                    questions: cleanQuestions
+                };
+            });
+
+            return normalizedQuizzes;
+        }
+
+        async function handleJsonBulkUpload() {
+            hideAlert("jsonUploadAlert");
+            const rawText = document.getElementById("jsonEditorTextarea").value.trim();
+            const btn = document.getElementById("jsonUploadSubmitBtn");
+
+            if (!rawText) {
+                showAlert("jsonUploadAlert", "error", "Please paste JSON or upload a .json file first.");
+                return;
+            }
+
+            let parsedJson;
+            try {
+                parsedJson = JSON.parse(rawText);
+            } catch (syntaxErr) {
+                showAlert("jsonUploadAlert", "error", `Invalid JSON syntax: ${syntaxErr.message}`);
+                return;
+            }
+
+            let validatedQuizzes;
+            try {
+                validatedQuizzes = validateAndNormalizeJsonPayload(parsedJson);
+            } catch (validationErr) {
+                showAlert("jsonUploadAlert", "error", `Validation error: ${validationErr.message}`);
+                return;
+            }
+
+            if (!supabaseClient) {
+                const totalQs = validatedQuizzes.reduce((sum, q) => sum + q.questions.length, 0);
+                showAlert("jsonUploadAlert", "info", `✓ JSON is valid (${validatedQuizzes.length} quiz(zes), ${totalQs} questions)! Connect Supabase keys in index.html to save to your live database.`);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = "Uploading to Supabase...";
+
+            try {
+                const { data: userData } = await supabaseClient.auth.getUser();
+                const userId = userData && userData.user ? userData.user.id : null;
+
+                let totalQuestionsUploaded = 0;
+                for (const quizObj of validatedQuizzes) {
+                    await insertQuizWithQuestions(quizObj, userId);
+                    totalQuestionsUploaded += quizObj.questions.length;
+                }
+
+                showAlert(
+                    "jsonUploadAlert",
+                    "success",
+                    `✓ Successfully uploaded ${validatedQuizzes.length} quiz(zes) with ${totalQuestionsUploaded} total question(s) to Supabase!`
+                );
+                clearJsonEditor();
+                // Keep the success alert visible after clearing editor
+                showAlert(
+                    "jsonUploadAlert",
+                    "success",
+                    `✓ Successfully uploaded ${validatedQuizzes.length} quiz(zes) with ${totalQuestionsUploaded} total question(s) to Supabase!`
+                );
+
+                await fetchAvailableQuizzes();
+            } catch (err) {
+                console.error("JSON upload error:", err);
+                showAlert("jsonUploadAlert", "error", `Database upload failed: ${err.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Validate & Upload JSON Quiz";
+            }
+        }
+
+        // =========================================================================
+        // 8. TEACHER MANAGE QUIZZES TAB (With Custom Confirmation Modal)
+        // =========================================================================
+        async function loadTeacherQuizzesTable() {
+            const tbody = document.getElementById("manageQuizzesTbody");
+            hideAlert("manageQuizzesAlert");
+
+            if (!supabaseClient) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-light);">Connect Supabase to manage published quizzes.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-light);">Loading quizzes...</td></tr>`;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("quizzes")
+                    .select("id, title, grade, created_at, questions(id)")
+                    .order("created_at", { ascending: false });
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-light);">No quizzes published yet.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                data.forEach((quiz) => {
+                    const count = Array.isArray(quiz.questions) ? quiz.questions.length : 0;
+                    const createdDate = new Date(quiz.created_at).toLocaleDateString();
+
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><strong>${escapeHtml(quiz.title)}</strong></td>
+                        <td>${escapeHtml(quiz.grade || "—")}</td>
+                        <td>${count} question(s)</td>
+                        <td>${escapeHtml(createdDate)}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="promptDeleteQuiz('${quiz.id}', '${escapeHtml(quiz.title).replace(/'/g, "\\'")}')">
+                                Delete Quiz
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                tbody.innerHTML = "";
+                showAlert("manageQuizzesAlert", "error", `Failed to load quizzes: ${err.message}`);
+            }
+        }
+
+        function promptDeleteQuiz(quizId, quizTitle) {
+            const modal = document.getElementById("confirmModal");
+            document.getElementById("confirmModalTitle").textContent = "Delete Quiz?";
+            document.getElementById("confirmModalMessage").textContent =
+                `Are you sure you want to permanently delete "${quizTitle}" along with all its questions and student submissions?`;
+
+            const confirmBtn = document.getElementById("confirmModalActionBtn");
+            confirmBtn.onclick = async () => {
+                closeConfirmModal();
+                await executeDeleteQuiz(quizId, quizTitle);
+            };
+
+            modal.classList.remove("hidden");
+        }
+
+        function closeConfirmModal() {
+            document.getElementById("confirmModal").classList.add("hidden");
+        }
+
+        async function executeDeleteQuiz(quizId, quizTitle) {
+            hideAlert("manageQuizzesAlert");
+            try {
+                const { error } = await supabaseClient
+                    .from("quizzes")
+                    .delete()
+                    .eq("id", quizId);
+
+                if (error) throw error;
+
+                showAlert("manageQuizzesAlert", "success", `✓ Deleted "${quizTitle}".`);
+                await loadTeacherQuizzesTable();
+                await fetchAvailableQuizzes();
+            } catch (err) {
+                showAlert("manageQuizzesAlert", "error", `Failed to delete quiz: ${err.message}`);
+            }
+        }
+
+        // =========================================================================
+        // 9. TEACHER STUDENT RESULTS TAB & CSV EXPORT
+        // =========================================================================
+        async function loadTeacherSubmissionsTable() {
+            const tbody = document.getElementById("studentResultsTbody");
+            const filterSelect = document.getElementById("resultsQuizFilter");
+            hideAlert("resultsTableAlert");
+
+            if (!supabaseClient) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-light);">Connect Supabase to view student submissions.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-light);">Loading student submissions...</td></tr>`;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("submissions")
+                    .select("id, quiz_id, student_name, class_section, score, total, percentage, missed_topics, submitted_at, quizzes(title)")
+                    .order("submitted_at", { ascending: false });
+
+                if (error) throw error;
+
+                cachedSubmissions = data || [];
+
+                const prevVal = filterSelect.value;
+                const quizMap = new Map();
+                cachedSubmissions.forEach((sub) => {
+                    const title = sub.quizzes && sub.quizzes.title ? sub.quizzes.title : "Unknown Quiz";
+                    quizMap.set(sub.quiz_id, title);
+                });
+
+                filterSelect.innerHTML = `<option value="all">All Quizzes (${cachedSubmissions.length})</option>`;
+                quizMap.forEach((title, id) => {
+                    const opt = document.createElement("option");
+                    opt.value = id;
+                    opt.textContent = title;
+                    filterSelect.appendChild(opt);
+                });
+
+                if ([...quizMap.keys()].includes(prevVal)) {
+                    filterSelect.value = prevVal;
+                }
+
+                renderFilteredResultsTable();
+            } catch (err) {
+                tbody.innerHTML = "";
+                showAlert("resultsTableAlert", "error", `Error loading results: ${err.message}`);
+            }
+        }
+
+        function getFilteredSubmissions() {
+            const selectedQuizId = document.getElementById("resultsQuizFilter").value;
+            const searchQuery = document.getElementById("resultsStudentSearch").value.trim().toLowerCase();
+
+            return cachedSubmissions.filter((sub) => {
+                const matchesQuiz = selectedQuizId === "all" || sub.quiz_id === selectedQuizId;
+                const matchesName = !searchQuery || (sub.student_name && sub.student_name.toLowerCase().includes(searchQuery));
+                return matchesQuiz && matchesName;
+            });
+        }
+
+        function renderFilteredResultsTable() {
+            const tbody = document.getElementById("studentResultsTbody");
+            const rows = getFilteredSubmissions();
+
+            if (rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-light);">No matching student submissions found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = "";
+            rows.forEach((sub) => {
+                const quizTitle = sub.quizzes && sub.quizzes.title ? sub.quizzes.title : "Deleted Quiz";
+                const submittedTime = new Date(sub.submitted_at).toLocaleString();
+                const missedText = Array.isArray(sub.missed_topics) && sub.missed_topics.length > 0
+                    ? sub.missed_topics.join(", ")
+                    : "None";
+
+                let pctClass = "pct-low";
+                if (sub.percentage >= 80) pctClass = "pct-high";
+                else if (sub.percentage >= 50) pctClass = "pct-mid";
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${escapeHtml(sub.student_name)}</strong></td>
+                    <td>${escapeHtml(sub.class_section || "—")}</td>
+                    <td>${escapeHtml(quizTitle)}</td>
+                    <td><strong>${sub.score} / ${sub.total}</strong></td>
+                    <td><span class="pct-badge ${pctClass}">${sub.percentage}%</span></td>
+                    <td style="font-size: 12.5px; color: var(--text-muted);">${escapeHtml(missedText)}</td>
+                    <td style="white-space: nowrap; font-size: 12.5px; color: var(--text-muted);">${escapeHtml(submittedTime)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function exportSubmissionsCsv() {
+            hideAlert("resultsTableAlert");
+            const rows = getFilteredSubmissions();
+
+            if (rows.length === 0) {
+                showAlert("resultsTableAlert", "error", "No student results available to export.");
+                return;
+            }
+
+            const headers = [
+                "Student Name",
+                "Class / Section",
+                "Quiz Title",
+                "Score",
+                "Total",
+                "Percentage (%)",
+                "Missed Topics",
+                "Submitted Date/Time"
+            ];
+
+            const csvLines = [headers.join(",")];
+
+            rows.forEach((sub) => {
+                const quizTitle = sub.quizzes && sub.quizzes.title ? sub.quizzes.title : "Deleted Quiz";
+                const submittedTime = new Date(sub.submitted_at).toLocaleString();
+                const missedText = Array.isArray(sub.missed_topics) && sub.missed_topics.length > 0
+                    ? sub.missed_topics.join("; ")
+                    : "None";
+
+                const escapedCells = [
+                    sub.student_name,
+                    sub.class_section || "",
+                    quizTitle,
+                    sub.score,
+                    sub.total,
+                    sub.percentage,
+                    missedText,
+                    submittedTime
+                ].map((val) => `"${String(val).replace(/"/g, '""')}"`);
+
+                csvLines.push(escapedCells.join(","));
+            });
+
+            const csvContent = csvLines.join("\n");
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `smartquiz_results_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
