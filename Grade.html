@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 8 Comprehensive 100-Question Mathematics Quiz</title>
+    <style>
+        :root {
+            --bg-page: #f4f7fb;
+            --bg-card: #ffffff;
+            --bg-subtle: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-light: #64748b;
+            --border-color: #cbd5e1;
+            --border-light: #e2e8f0;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-soft: #eff6ff;
+            --primary-border: #bfdbfe;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --success-border: #6ee7b7;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --danger-border: #fca5a5;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+            --radius-md: 10px;
+            --radius-lg: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.55;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .grade-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+        }
+
+        .brand-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.25;
+        }
+
+        .brand-subtitle {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .progress-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            padding: 8px 14px;
+            border-radius: 999px;
+        }
+
+        .progress-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .progress-label span {
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .progress-track {
+            width: 110px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            border-radius: 999px;
+            transition: width 0.25s ease;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 960px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px 16px 48px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+        }
+
+        /* Student Info & Controls Grid */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 720px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+
+        .field-input, .field-select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: var(--text-main);
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .field-input:focus, .field-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .instructions-box {
+            background: var(--primary-soft);
+            border: 1px solid var(--primary-border);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            font-size: 13.5px;
+            color: #1e3a8a;
+        }
+
+        .instructions-box strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .instructions-box ul {
+            margin-left: 18px;
+            color: #1e40af;
+        }
+
+        .instructions-box li {
+            margin-bottom: 2px;
+        }
+
+        /* Results Dashboard */
+        .results-dashboard {
+            display: none;
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            animation: slideDown 0.35s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-banner {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            color: #ffffff;
+            padding: 22px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .results-banner h2 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .results-banner p {
+            font-size: 13.5px;
+            color: #dbeafe;
+        }
+
+        .score-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 12px 18px;
+            border-radius: 12px;
+        }
+
+        .stat-block {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #dbeafe;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .stat-divider {
+            width: 1px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .results-actions {
+            padding: 16px 24px;
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #ffffff;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: var(--text-main);
+            border-color: var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-toggle.active {
+            background: #1e293b;
+            color: #ffffff;
+            border-color: #1e293b;
+        }
+
+        /* Topic Breakdown Grid */
+        .topic-breakdown-section {
+            padding: 20px 24px;
+        }
+
+        .topic-breakdown-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 10px;
+        }
+
+        .topic-stat-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 12.5px;
+        }
+
+        .topic-stat-name {
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        .topic-stat-score {
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        .score-high { background: #dcfce7; color: #166534; }
+        .score-mid { background: #fef3c7; color: #92400e; }
+        .score-low { background: #fee2e2; color: #991b1b; }
+
+        /* Topic Section Divider */
+        .topic-banner {
+            background: #1e293b;
+            color: #ffffff;
+            padding: 12px 18px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .topic-banner span {
+            font-size: 12px;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+
+        /* Question Card */
+        .question-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .question-card.is-correct {
+            border-color: var(--success-border);
+            background-color: #f6fef9;
+        }
+
+        .question-card.is-incorrect {
+            border-color: var(--danger-border);
+            background-color: #fffafa;
+        }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .q-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .q-num {
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 6px;
+        }
+
+        .q-topic-tag {
+            background: var(--primary-soft);
+            color: var(--primary-dark);
+            border: 1px solid var(--primary-border);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 9px;
+            border-radius: 6px;
+        }
+
+        .q-status-badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            display: none;
+        }
+
+        .q-status-badge.correct {
+            display: inline-block;
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success-border);
+        }
+
+        .q-status-badge.incorrect {
+            display: inline-block;
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid var(--danger-border);
+        }
+
+        .q-text {
+            font-size: 15.5px;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .q-hint {
+            font-size: 12.5px;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .answer-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .answer-row label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-light);
+        }
+
+        .answer-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-main);
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .answer-input:focus {
+            background: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .answer-input.input-correct {
+            background: var(--success-bg);
+            border-color: var(--success);
+            color: #065f46;
+            font-weight: 700;
+        }
+
+        .answer-input.input-incorrect {
+            background: var(--danger-bg);
+            border-color: var(--danger);
+            color: #991b1b;
+        }
+
+        /* Feedback Explanation Box */
+        .feedback-box {
+            display: none;
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            border-radius: var(--radius-md);
+            font-size: 13.5px;
+        }
+
+        .feedback-answer-line {
+            margin-bottom: 6px;
+            font-weight: 700;
+            color: #991b1b;
+        }
+
+        .correct-pill {
+            display: inline-block;
+            background: #ffffff;
+            color: #065f46;
+            border: 1px solid var(--success-border);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 5px;
+            margin-left: 4px;
+        }
+
+        .feedback-explanation {
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        /* Bottom Submit Card */
+        .submit-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .submit-btn-large {
+            padding: 13px 28px;
+            font-size: 16px;
+            font-weight: 700;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .submit-btn-large:hover {
+            background: var(--primary-dark);
+        }
+
+        .submit-btn-large:active {
+            transform: scale(0.99);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            text-align: center;
+            padding: 18px;
+            font-size: 12.5px;
+            color: var(--text-light);
+            border-top: 1px solid var(--border-light);
+            background: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <div class="header-inner">
+            <div class="brand-group">
+                <div class="grade-badge">G8</div>
+                <div>
+                    <div class="brand-title">Grade 8 Comprehensive Mathematics Quiz</div>
+                    <div class="brand-subtitle">20 Topics • 100 Fill-in-the-Blank Questions</div>
+                </div>
+            </div>
+            <div class="progress-pill">
+                <div class="progress-label">Answered: <span id="top-progress-count">0</span> / 100</div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="top-progress-bar"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Results Dashboard (Hidden until submitted) -->
+        <section id="results-dashboard" class="results-dashboard">
+            <div class="results-banner">
+                <div>
+                    <h2 id="res-student-heading">Quiz Results</h2>
+                    <p id="res-grade-message">Review your topic-by-topic breakdown and step-by-step explanations below.</p>
+                </div>
+                <div class="score-stats">
+                    <div class="stat-block">
+                        <div class="stat-label">Total Score</div>
+                        <div class="stat-value" id="res-score-fraction">0 / 100</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-block">
+                        <div class="stat-label">Percentage</div>
+                        <div class="stat-value" id="res-score-percent">0%</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-block">
+                        <div class="stat-label">Grade</div>
+                        <div class="stat-value" id="res-letter-grade">F</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-actions">
+                <div class="action-buttons">
+                    <button type="button" id="filter-all-btn" class="btn btn-secondary btn-toggle active" onclick="setReviewFilter('all')">
+                        Show All Questions (100)
+                    </button>
+                    <button type="button" id="filter-wrong-btn" class="btn btn-secondary btn-toggle" onclick="setReviewFilter('wrong')">
+                        Show Incorrect Only (<span id="wrong-count-label">0</span>)
+                    </button>
+                </div>
+                <div class="action-buttons">
+                    <button type="button" id="copy-btn" class="btn btn-primary" onclick="copyResultsSummary()">
+                        Copy Results Summary
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="resetQuiz()">
+                        Reset / Try Again
+                    </button>
+                </div>
+            </div>
+
+            <div class="topic-breakdown-section">
+                <div class="topic-breakdown-title">Performance Breakdown Across All 20 Topics</div>
+                <div id="topic-breakdown-grid" class="topic-grid"></div>
+            </div>
+        </section>
+
+        <!-- Student Details, Filter & Instructions -->
+        <section class="card">
+            <div class="controls-grid">
+                <div class="field-group">
+                    <label for="student-name">Student Name</label>
+                    <input type="text" id="student-name" class="field-input" placeholder="Enter your full name">
+                </div>
+                <div class="field-group">
+                    <label for="student-class">Class / Section</label>
+                    <input type="text" id="student-class" class="field-input" placeholder="e.g., Grade 8 - A">
+                </div>
+                <div class="field-group">
+                    <label for="topic-filter">Filter View by Topic</label>
+                    <select id="topic-filter" class="field-select" onchange="applyTopicFilter()">
+                        <option value="all">All 20 Topics (Questions 1–100)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="instructions-box">
+                <strong>Instructions for Students:</strong>
+                <ul>
+                    <li>Type your final answer in the text box below each question. Follow the formatting hint shown under each question.</li>
+                    <li>You may use the <strong>Filter View by Topic</strong> dropdown at any time to focus on one topic; your typed answers stay saved.</li>
+                    <li>When finished, click <strong>Submit Quiz</strong> at the bottom to view your score, topic breakdown, and step-by-step solutions for any missed questions.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Quiz Questions Container -->
+        <form id="quiz-form" onsubmit="handleQuizSubmit(event)">
+            <div id="questions-container" style="display: flex; flex-direction: column; gap: 14px;"></div>
+
+            <!-- Bottom Submit Bar -->
+            <div id="submit-bar" class="submit-card" style="margin-top: 20px;">
+                <div>
+                    <div style="font-weight: 700; font-size: 15px;">Ready to finish?</div>
+                    <div style="font-size: 13px; color: var(--text-light);">
+                        You have answered <strong id="bottom-progress-count" style="color: var(--text-main);">0</strong> of <strong>100</strong> questions.
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn-large">Submit Quiz (100 Questions)</button>
+            </div>
+        </form>
+
+    </main>
+
+    <footer>
+        Grade 8 Mathematics Comprehensive Assessment • Offline-Ready Single File Application
+    </footer>
+
+    <script>
+        const TOPICS = [
+            "1. Types of Decimal",
+            "2. Squares",
+            "3. Square Roots",
+            "4. Cube and Cube Roots",
+            "5. Compound Proportion",
+            "6. Direct Proportion",
+            "7. Inverse Proportion",
+            "8. Conversion of Currency",
+            "9. Profit and Mark-up",
+            "10. Profit Percentage and Discounts",
+            "11. Insurance",
+            "12. Inheritance",
+            "13. Partnership",
+            "14. Pythagoras Theorem",
+            "15. Circles",
+            "16. Arc Length and Area of a Sector",
+            "17. Volume & Surface Area (Pyramid, Sphere, Cone)",
+            "18. Probability",
+            "19. Mutually Exclusive Events",
+            "20. Independent Events"
+        ];
+
+        const QUESTIONS = [
+            // =========================================================================
+            // 1. TYPES OF DECIMAL (Q1 - Q5)
+            // =========================================================================
+            {
+                id: 1,
+                topicIndex: 0,
+                question: "Convert the fraction 7/8 into a decimal.",
+                hint: "Enter decimal number (e.g., 0.5)",
+                acceptedAnswers: ["0.875", ".875"],
+                displayAnswer: "0.875",
+                explanation: "Divide 7 by 8: 7 ÷ 8 = 0.875."
+            },
+            {
+                id: 2,
+                topicIndex: 0,
+                question: "Is the decimal representation of 5/16 terminating or non-terminating?",
+                hint: "Type: terminating or non-terminating",
+                acceptedAnswers: ["terminating", "terminatingdecimal"],
+                displayAnswer: "terminating",
+                explanation: "The denominator 16 = 2⁴ has only 2 as a prime factor, so 5/16 = 0.3125 is a terminating decimal."
+            },
+            {
+                id: 3,
+                topicIndex: 0,
+                question: "Is the decimal expansion of 4/11 terminating or non-terminating?",
+                hint: "Type: terminating or non-terminating",
+                acceptedAnswers: ["non-terminating", "nonterminating", "non-terminatingrecurring", "recurring", "repeating"],
+                displayAnswer: "non-terminating",
+                explanation: "4 ÷ 11 = 0.363636..., which repeats endlessly without ending, so it is non-terminating."
+            },
+            {
+                id: 4,
+                topicIndex: 0,
+                question: "Express the fraction 3/25 as a decimal.",
+                hint: "Enter decimal number",
+                acceptedAnswers: ["0.12", ".12"],
+                displayAnswer: "0.12",
+                explanation: "Multiply numerator and denominator by 4: (3 × 4)/(25 × 4) = 12/100 = 0.12."
+            },
+            {
+                id: 5,
+                topicIndex: 0,
+                question: "How many digits are in the repeating block of the decimal for 2/3?",
+                hint: "Enter number only (e.g., 1)",
+                acceptedAnswers: ["1", "onedigit"],
+                displayAnswer: "1",
+                explanation: "2/3 = 0.6666..., so only 1 digit (6) repeats."
+            },
+
+            // =========================================================================
+            // 2. SQUARES (Q6 - Q10)
+            // =========================================================================
+            {
+                id: 6,
+                topicIndex: 1,
+                question: "Find the square of 19.",
+                hint: "Enter number only",
+                acceptedAnswers: ["361"],
+                displayAnswer: "361",
+                explanation: "19² = 19 × 19 = 361."
+            },
+            {
+                id: 7,
+                topicIndex: 1,
+                question: "Calculate the value of (0.15)².",
+                hint: "Enter decimal number",
+                acceptedAnswers: ["0.0225", ".0225"],
+                displayAnswer: "0.0225",
+                explanation: "15² = 225. With two decimal places squared, the result has four decimal places: 0.0225."
+            },
+            {
+                id: 8,
+                topicIndex: 1,
+                question: "Find the square of the fraction 4/9.",
+                hint: "Answer as a fraction (e.g., 1/4)",
+                acceptedAnswers: ["16/81"],
+                displayAnswer: "16/81",
+                explanation: "(4/9)² = 4² / 9² = 16/81."
+            },
+            {
+                id: 9,
+                topicIndex: 1,
+                question: "Evaluate (-14)².",
+                hint: "Enter number only",
+                acceptedAnswers: ["196"],
+                displayAnswer: "196",
+                explanation: "The square of a negative number is positive: (-14) × (-14) = 196."
+            },
+            {
+                id: 10,
+                topicIndex: 1,
+                question: "What is the smallest whole number by which 72 must be multiplied to make it a perfect square?",
+                hint: "Enter number only",
+                acceptedAnswers: ["2"],
+                displayAnswer: "2",
+                explanation: "Prime factorization of 72 = 2³ × 3² = (2² × 3²) × 2. Multiplying by 2 gives 144 = 12²."
+            },
+
+            // =========================================================================
+            // 3. SQUARE ROOTS (Q11 - Q15)
+            // =========================================================================
+            {
+                id: 11,
+                topicIndex: 2,
+                question: "Find the positive square root of 625.",
+                hint: "Enter number only",
+                acceptedAnswers: ["25"],
+                displayAnswer: "25",
+                explanation: "25 × 25 = 625, so √625 = 25."
+            },
+            {
+                id: 12,
+                topicIndex: 2,
+                question: "Find the value of √(1.44).",
+                hint: "Enter decimal number",
+                acceptedAnswers: ["1.2"],
+                displayAnswer: "1.2",
+                explanation: "Since 12² = 144, √1.44 = 1.2."
+            },
+            {
+                id: 13,
+                topicIndex: 2,
+                question: "Evaluate √(49 / 121).",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["7/11"],
+                displayAnswer: "7/11",
+                explanation: "√49 / √121 = 7/11."
+            },
+            {
+                id: 14,
+                topicIndex: 2,
+                question: "The area of a square garden is 324 m². Find the length of one side of the garden.",
+                hint: "Enter number only (in meters)",
+                acceptedAnswers: ["18"],
+                displayAnswer: "18",
+                explanation: "Side = √Area = √324 = 18 m."
+            },
+            {
+                id: 15,
+                topicIndex: 2,
+                question: "Find the value of √(0.0081).",
+                hint: "Enter decimal number",
+                acceptedAnswers: ["0.09", ".09"],
+                displayAnswer: "0.09",
+                explanation: "√81 = 9, and half of 4 decimal places is 2 decimal places, giving 0.09."
+            },
+
+            // =========================================================================
+            // 4. CUBE AND CUBE ROOTS (Q16 - Q20)
+            // =========================================================================
+            {
+                id: 16,
+                topicIndex: 3,
+                question: "Find the cube of 8.",
+                hint: "Enter number only",
+                acceptedAnswers: ["512"],
+                displayAnswer: "512",
+                explanation: "8³ = 8 × 8 × 8 = 512."
+            },
+            {
+                id: 17,
+                topicIndex: 3,
+                question: "Evaluate (-5)³.",
+                hint: "Enter number only (include minus sign)",
+                acceptedAnswers: ["-125"],
+                displayAnswer: "-125",
+                explanation: "(-5) × (-5) × (-5) = 25 × (-5) = -125."
+            },
+            {
+                id: 18,
+                topicIndex: 3,
+                question: "Find the cube root of 343.",
+                hint: "Enter number only",
+                acceptedAnswers: ["7"],
+                displayAnswer: "7",
+                explanation: "7 × 7 × 7 = 343, so ∛343 = 7."
+            },
+            {
+                id: 19,
+                topicIndex: 3,
+                question: "Find the cube root of -216.",
+                hint: "Enter number only (include minus sign)",
+                acceptedAnswers: ["-6"],
+                displayAnswer: "-6",
+                explanation: "(-6) × (-6) × (-6) = -216, so ∛(-216) = -6."
+            },
+            {
+                id: 20,
+                topicIndex: 3,
+                question: "The volume of a cubical box is 1,331 cm³. Find the length of each edge.",
+                hint: "Enter number only (in cm)",
+                acceptedAnswers: ["11"],
+                displayAnswer: "11",
+                explanation: "Edge = ∛1331 = 11 cm (since 11³ = 1331)."
+            },
+
+            // =========================================================================
+            // 5. COMPOUND PROPORTION (Q21 - Q25)
+            // =========================================================================
+            {
+                id: 21,
+                topicIndex: 4,
+                question: "If 12 workers can build 60 meters of wall in 5 days, how many meters of wall can 18 workers build in 4 days?",
+                hint: "Enter number only (in meters)",
+                acceptedAnswers: ["72"],
+                displayAnswer: "72",
+                explanation: "Rate per worker per day = 60 ÷ (12 × 5) = 1 meter/day. For 18 workers in 4 days: 18 × 4 × 1 = 72 meters."
+            },
+            {
+                id: 22,
+                topicIndex: 4,
+                question: "If 8 machines produce 400 toys in 5 hours, how many hours will 10 machines take to produce 600 toys?",
+                hint: "Enter number only (in hours)",
+                acceptedAnswers: ["6"],
+                displayAnswer: "6",
+                explanation: "Each machine produces 400 ÷ (8 × 5) = 10 toys/hour. 10 machines produce 100 toys/hour, so 600 toys take 600 ÷ 100 = 6 hours."
+            },
+            {
+                id: 23,
+                topicIndex: 4,
+                question: "15 men working 8 hours a day can complete a project in 12 days. How many days will 20 men working 6 hours a day take to complete the same project?",
+                hint: "Enter number only (in days)",
+                acceptedAnswers: ["12"],
+                displayAnswer: "12",
+                explanation: "Total man-hours needed = 15 × 8 × 12 = 1440. Days = 1440 ÷ (20 × 6) = 1440 ÷ 120 = 12 days."
+            },
+            {
+                id: 24,
+                topicIndex: 4,
+                question: "If 6 cows graze 18 bundles of grass in 3 days, how many bundles of grass will 10 cows graze in 5 days?",
+                hint: "Enter number only",
+                acceptedAnswers: ["50"],
+                displayAnswer: "50",
+                explanation: "1 cow grazes 18 ÷ (6 × 3) = 1 bundle/day. 10 cows in 5 days graze 10 × 5 × 1 = 50 bundles."
+            },
+            {
+                id: 25,
+                topicIndex: 4,
+                question: "24 typists can type 480 pages in 4 days. How many typists are needed to type 900 pages in 6 days?",
+                hint: "Enter number only",
+                acceptedAnswers: ["30"],
+                displayAnswer: "30",
+                explanation: "1 typist types 480 ÷ (24 × 4) = 5 pages/day. In 6 days, 1 typist types 30 pages. Typists needed = 900 ÷ 30 = 30."
+            },
+
+            // =========================================================================
+            // 6. DIRECT PROPORTION (Q26 - Q30)
+            // =========================================================================
+            {
+                id: 26,
+                topicIndex: 5,
+                question: "If y is directly proportional to x, and y = 42 when x = 6, find the constant of proportionality k (where y = kx).",
+                hint: "Enter number only",
+                acceptedAnswers: ["7", "k=7"],
+                displayAnswer: "7",
+                explanation: "k = y / x = 42 / 6 = 7."
+            },
+            {
+                id: 27,
+                topicIndex: 5,
+                question: "y varies directly as x. When x = 4, y = 28. Find y when x = 11.",
+                hint: "Enter number only",
+                acceptedAnswers: ["77", "y=77"],
+                displayAnswer: "77",
+                explanation: "k = 28 ÷ 4 = 7. When x = 11, y = 7 × 11 = 77."
+            },
+            {
+                id: 28,
+                topicIndex: 5,
+                question: "If 7 identical books cost $84, how much will 12 such books cost?",
+                hint: "Enter number only",
+                acceptedAnswers: ["144"],
+                displayAnswer: "144",
+                explanation: "Cost of 1 book = 84 ÷ 7 = $12. Cost of 12 books = 12 × 12 = $144."
+            },
+            {
+                id: 29,
+                topicIndex: 5,
+                question: "A train covers 210 km in 3 hours at uniform speed. How many kilometers will it cover in 5 hours?",
+                hint: "Enter number only",
+                acceptedAnswers: ["350"],
+                displayAnswer: "350",
+                explanation: "Speed = 210 ÷ 3 = 70 km/h. In 5 hours, distance = 70 × 5 = 350 km."
+            },
+            {
+                id: 30,
+                topicIndex: 5,
+                question: "If 15 liters of petrol cost $27, how many liters of petrol can be bought for $45?",
+                hint: "Enter number only",
+                acceptedAnswers: ["25"],
+                displayAnswer: "25",
+                explanation: "Cost per liter = 27 ÷ 15 = $1.80. Liters for $45 = 45 ÷ 1.80 = 25 liters."
+            },
+
+            // =========================================================================
+            // 7. INVERSE PROPORTION (Q31 - Q35)
+            // =========================================================================
+            {
+                id: 31,
+                topicIndex: 6,
+                question: "y is inversely proportional to x. When x = 6, y = 12. Find y when x = 9.",
+                hint: "Enter number only",
+                acceptedAnswers: ["8", "y=8"],
+                displayAnswer: "8",
+                explanation: "For inverse proportion, x × y = k. Here k = 6 × 12 = 72. When x = 9, y = 72 ÷ 9 = 8."
+            },
+            {
+                id: 32,
+                topicIndex: 6,
+                question: "8 pipes can fill a water tank in 15 hours. How many hours will 12 pipes take to fill the same tank?",
+                hint: "Enter number only",
+                acceptedAnswers: ["10"],
+                displayAnswer: "10",
+                explanation: "8 × 15 = 12 × t → 120 = 12t → t = 10 hours."
+            },
+            {
+                id: 33,
+                topicIndex: 6,
+                question: "Driving at 60 km/h, a journey takes 4 hours. How many hours will the same journey take at 80 km/h?",
+                hint: "Enter number only",
+                acceptedAnswers: ["3"],
+                displayAnswer: "3",
+                explanation: "Distance = 60 × 4 = 240 km. Time at 80 km/h = 240 ÷ 80 = 3 hours."
+            },
+            {
+                id: 34,
+                topicIndex: 6,
+                question: "A garrison of 120 soldiers has food provisions for 25 days. If 30 more soldiers arrive, how many days will the food last?",
+                hint: "Enter number only",
+                acceptedAnswers: ["20"],
+                displayAnswer: "20",
+                explanation: "New total = 120 + 30 = 150 soldiers. Days = (120 × 25) ÷ 150 = 3000 ÷ 150 = 20 days."
+            },
+            {
+                id: 35,
+                topicIndex: 6,
+                question: "If 9 workers can finish a task in 16 days, how many workers are required to finish the same task in 12 days?",
+                hint: "Enter number only",
+                acceptedAnswers: ["12"],
+                displayAnswer: "12",
+                explanation: "Total worker-days = 9 × 16 = 144. Workers needed = 144 ÷ 12 = 12 workers."
+            },
+
+            // =========================================================================
+            // 8. CONVERSION OF CURRENCY (Q36 - Q40)
+            // =========================================================================
+            {
+                id: 36,
+                topicIndex: 7,
+                question: "If 1 US Dollar (USD) = 280 Pakistani Rupees (PKR), convert 45 USD into PKR.",
+                hint: "Enter number only",
+                acceptedAnswers: ["12600", "12,600"],
+                displayAnswer: "12600",
+                explanation: "45 × 280 = 12,600 PKR."
+            },
+            {
+                id: 37,
+                topicIndex: 7,
+                question: "If 1 Euro (EUR) = 1.10 USD, how many Euros will you get in exchange for 220 USD?",
+                hint: "Enter number only",
+                acceptedAnswers: ["200"],
+                displayAnswer: "200",
+                explanation: "220 ÷ 1.10 = 200 EUR."
+            },
+            {
+                id: 38,
+                topicIndex: 7,
+                question: "Given that 1 British Pound (GBP) = 350 PKR, convert 24,500 PKR into GBP.",
+                hint: "Enter number only",
+                acceptedAnswers: ["70"],
+                displayAnswer: "70",
+                explanation: "24,500 ÷ 350 = 70 GBP."
+            },
+            {
+                id: 39,
+                topicIndex: 7,
+                question: "If 1 Saudi Riyal (SAR) = 74 PKR, how much is 150 SAR in PKR?",
+                hint: "Enter number only",
+                acceptedAnswers: ["11100", "11,100"],
+                displayAnswer: "11100",
+                explanation: "150 × 74 = 11,100 PKR."
+            },
+            {
+                id: 40,
+                topicIndex: 7,
+                question: "If 1 USD = 0.80 GBP and 1 GBP = 350 PKR, convert 20 USD into PKR.",
+                hint: "Enter number only",
+                acceptedAnswers: ["5600", "5,600"],
+                displayAnswer: "5600",
+                explanation: "20 USD = 20 × 0.80 = 16 GBP. Then 16 × 350 = 5,600 PKR."
+            },
+
+            // =========================================================================
+            // 9. PROFIT AND MARK-UP (Q41 - Q45)
+            // =========================================================================
+            {
+                id: 41,
+                topicIndex: 8,
+                question: "A bicycle is bought for $145 and sold for $172. Find the profit amount.",
+                hint: "Enter number only",
+                acceptedAnswers: ["27"],
+                displayAnswer: "27",
+                explanation: "Profit = Selling Price − Cost Price = 172 − 145 = $27."
+            },
+            {
+                id: 42,
+                topicIndex: 8,
+                question: "Find the simple mark-up (interest) on a principal of $2,000 borrowed for 3 years at a rate of 6% per annum.",
+                hint: "Enter number only",
+                acceptedAnswers: ["360"],
+                displayAnswer: "360",
+                explanation: "Mark-up = (P × R × T) / 100 = (2000 × 6 × 3) / 100 = $360."
+            },
+            {
+                id: 43,
+                topicIndex: 8,
+                question: "A shopkeeper buys a watch for $80 and wants to make a profit of $24. What should be the selling price?",
+                hint: "Enter number only",
+                acceptedAnswers: ["104"],
+                displayAnswer: "104",
+                explanation: "Selling Price = Cost Price + Profit = 80 + 24 = $104."
+            },
+            {
+                id: 44,
+                topicIndex: 8,
+                question: "Calculate the total amount payable after 2 years on a loan of $5,000 at 8% per annum simple mark-up.",
+                hint: "Enter number only",
+                acceptedAnswers: ["5800", "5,800"],
+                displayAnswer: "5800",
+                explanation: "Mark-up = (5000 × 8 × 2) / 100 = $800. Total amount = 5000 + 800 = $5,800."
+            },
+            {
+                id: 45,
+                topicIndex: 8,
+                question: "A merchant earned $450 simple mark-up on $3,000 in 3 years. What was the annual rate of mark-up (%)?",
+                hint: "Enter number only (e.g., 5)",
+                acceptedAnswers: ["5"],
+                displayAnswer: "5",
+                explanation: "R = (Mark-up × 100) / (P × T) = (450 × 100) / (3000 × 3) = 45000 / 9000 = 5%."
+            },
+
+            // =========================================================================
+            // 10. PROFIT PERCENTAGE AND DISCOUNTS (Q46 - Q50)
+            // =========================================================================
+            {
+                id: 46,
+                topicIndex: 9,
+                question: "A laptop is purchased for $500 and sold for $575. Find the profit percentage.",
+                hint: "Enter number only (e.g., 15)",
+                acceptedAnswers: ["15"],
+                displayAnswer: "15",
+                explanation: "Profit = 575 − 500 = $75. Profit % = (75 / 500) × 100 = 15%."
+            },
+            {
+                id: 47,
+                topicIndex: 9,
+                question: "A jacket has a marked price of $120. During a sale, a 25% discount is offered. What is the sale price?",
+                hint: "Enter number only",
+                acceptedAnswers: ["90"],
+                displayAnswer: "90",
+                explanation: "Discount = 25% of 120 = $30. Sale Price = 120 − 30 = $90."
+            },
+            {
+                id: 48,
+                topicIndex: 9,
+                question: "A mobile phone is bought for $400 and sold at a loss of 12%. Find the selling price.",
+                hint: "Enter number only",
+                acceptedAnswers: ["352"],
+                displayAnswer: "352",
+                explanation: "Loss = 12% of 400 = $48. Selling Price = 400 − 48 = $352."
+            },
+            {
+                id: 49,
+                topicIndex: 9,
+                question: "An item marked at $250 is sold for $210. Find the discount percentage.",
+                hint: "Enter number only",
+                acceptedAnswers: ["16"],
+                displayAnswer: "16",
+                explanation: "Discount = 250 − 210 = $40. Discount % = (40 / 250) × 100 = 16%."
+            },
+            {
+                id: 50,
+                topicIndex: 9,
+                question: "By selling a table for $276, a carpenter makes a profit of 15%. Find the cost price of the table.",
+                hint: "Enter number only",
+                acceptedAnswers: ["240"],
+                displayAnswer: "240",
+                explanation: "115% of CP = 276 → CP = (276 × 100) / 115 = $240."
+            },
+
+            // =========================================================================
+            // 11. INSURANCE (Q51 - Q55)
+            // =========================================================================
+            {
+                id: 51,
+                topicIndex: 10,
+                question: "A car valued at $20,000 is insured at an annual premium rate of 3.5%. Find the annual insurance premium.",
+                hint: "Enter number only",
+                acceptedAnswers: ["700"],
+                displayAnswer: "700",
+                explanation: "Annual premium = 3.5% of 20,000 = 0.035 × 20,000 = $700."
+            },
+            {
+                id: 52,
+                topicIndex: 10,
+                question: "Mr. Bilal took out a life insurance policy worth $50,000 at an annual rate of 4.2% plus a $30 policy fee. Find the total first annual premium.",
+                hint: "Enter number only",
+                acceptedAnswers: ["2130", "2,130"],
+                displayAnswer: "2130",
+                explanation: "4.2% of 50,000 = $2,100. Adding the $30 policy fee gives $2,130."
+            },
+            {
+                id: 53,
+                topicIndex: 10,
+                question: "A house is insured for $120,000 at an annual rate of 1.5%. What is the total premium paid over 4 years?",
+                hint: "Enter number only",
+                acceptedAnswers: ["7200", "7,200"],
+                displayAnswer: "7200",
+                explanation: "Annual premium = 1.5% of 120,000 = $1,800. Over 4 years: 1,800 × 4 = $7,200."
+            },
+            {
+                id: 54,
+                topicIndex: 10,
+                question: "A vehicle worth $30,000 is insured at 3% per annum. If its value depreciates by 10% in the second year, what is the premium for the second year at the same 3% rate?",
+                hint: "Enter number only",
+                acceptedAnswers: ["810"],
+                displayAnswer: "810",
+                explanation: "Second-year value = 30,000 − 10% of 30,000 = $27,000. Premium = 3% of 27,000 = $810."
+            },
+            {
+                id: 55,
+                topicIndex: 10,
+                question: "If an annual insurance premium of $960 is paid at a rate of 2.4% of the insured value, what is the insured value of the property?",
+                hint: "Enter number only",
+                acceptedAnswers: ["40000", "40,000"],
+                displayAnswer: "40000",
+                explanation: "2.4% of Value = 960 → Value = (960 × 100) / 2.4 = $40,000."
+            },
+
+            // =========================================================================
+            // 12. INHERITANCE (Q56 - Q60)
+            // =========================================================================
+            {
+                id: 56,
+                topicIndex: 11,
+                question: "A man leaves an estate of $64,000. His widow receives 1/8 of the estate. How much does the widow receive?",
+                hint: "Enter number only",
+                acceptedAnswers: ["8000", "8,000"],
+                displayAnswer: "8000",
+                explanation: "Widow's share = (1/8) × 64,000 = $8,000."
+            },
+            {
+                id: 57,
+                topicIndex: 11,
+                question: "An estate of $45,000 is divided between a son and a daughter in the ratio 2 : 1. How much does the son receive?",
+                hint: "Enter number only",
+                acceptedAnswers: ["30000", "30,000"],
+                displayAnswer: "30000",
+                explanation: "Total parts = 2 + 1 = 3. Son's share = (2/3) × 45,000 = $30,000."
+            },
+            {
+                id: 58,
+                topicIndex: 11,
+                question: "A deceased person leaves $80,000. After paying $8,000 in debts, the remaining amount is shared equally among 4 children. How much does each child get?",
+                hint: "Enter number only",
+                acceptedAnswers: ["18000", "18,000"],
+                displayAnswer: "18000",
+                explanation: "Remaining estate = 80,000 − 8,000 = $72,000. Each child gets 72,000 ÷ 4 = $18,000."
+            },
+            {
+                id: 59,
+                topicIndex: 11,
+                question: "An inheritance of $96,000 is distributed so the widow gets 1/8, and the remainder is divided between 1 son and 1 daughter in the ratio 2 : 1. How much does the daughter get?",
+                hint: "Enter number only",
+                acceptedAnswers: ["28000", "28,000"],
+                displayAnswer: "28000",
+                explanation: "Widow gets 96,000 ÷ 8 = $12,000. Remainder = 96,000 − 12,000 = $84,000. Daughter gets (1/3) × 84,000 = $28,000."
+            },
+            {
+                id: 60,
+                topicIndex: 11,
+                question: "An estate of $70,000 is divided among 2 sons and 3 daughters where each son gets twice as much as each daughter (ratio 2 : 2 : 1 : 1 : 1). How much does one son receive?",
+                hint: "Enter number only",
+                acceptedAnswers: ["20000", "20,000"],
+                displayAnswer: "20000",
+                explanation: "Total parts = (2 × 2) + (3 × 1) = 7 parts. One part = 70,000 ÷ 7 = $10,000. Each son gets 2 × 10,000 = $20,000."
+            },
+
+            // =========================================================================
+            // 13. PARTNERSHIP (Q61 - Q65)
+            // =========================================================================
+            {
+                id: 61,
+                topicIndex: 12,
+                question: "Ali and Sara start a business by investing $4,000 and $6,000 respectively for 1 year. Out of a total profit of $2,500, what is Sara's share?",
+                hint: "Enter number only",
+                acceptedAnswers: ["1500", "1,500"],
+                displayAnswer: "1500",
+                explanation: "Investment ratio = 4000 : 6000 = 2 : 3 (total 5 parts). Sara's share = (3/5) × 2500 = $1,500."
+            },
+            {
+                id: 62,
+                topicIndex: 12,
+                question: "Three partners A, B, and C invest in the ratio 2 : 3 : 5. If the annual profit is $12,000, how much does partner C receive?",
+                hint: "Enter number only",
+                acceptedAnswers: ["6000", "6,000"],
+                displayAnswer: "6000",
+                explanation: "Total parts = 2 + 3 + 5 = 10. C's share = (5/10) × 12,000 = $6,000."
+            },
+            {
+                id: 63,
+                topicIndex: 12,
+                question: "Zain invests $5,000 for 12 months, and Omar invests $10,000 for 6 months. If total profit is $3,600, what is Zain's share?",
+                hint: "Enter number only",
+                acceptedAnswers: ["1800", "1,800"],
+                displayAnswer: "1800",
+                explanation: "Capital × Time: Zain = 5000 × 12 = 60,000; Omar = 10,000 × 6 = 60,000. Ratio is 1 : 1, so Zain gets 3600 ÷ 2 = $1,800."
+            },
+            {
+                id: 64,
+                topicIndex: 12,
+                question: "A and B invest $3,000 and $4,500 respectively. At year-end, A's share of the profit is $800. What is B's share of the profit?",
+                hint: "Enter number only",
+                acceptedAnswers: ["1200", "1,200"],
+                displayAnswer: "1200",
+                explanation: "Ratio = 3000 : 4500 = 2 : 3. Since 2 parts = $800, 1 part = $400, so B gets 3 × 400 = $1,200."
+            },
+            {
+                id: 65,
+                topicIndex: 12,
+                question: "Hina invests $6,000 for 8 months and Nida invests $4,000 for 12 months. Out of a total profit of $4,400, what is Hina's share?",
+                hint: "Enter number only",
+                acceptedAnswers: ["2200", "2,200"],
+                displayAnswer: "2200",
+                explanation: "Hina = 6000 × 8 = 48,000; Nida = 4000 × 12 = 48,000. Ratio = 1 : 1, so Hina gets 4,400 ÷ 2 = $2,200."
+            },
+
+            // =========================================================================
+            // 14. PYTHAGORAS THEOREM (Q66 - Q70)
+            // =========================================================================
+            {
+                id: 66,
+                topicIndex: 13,
+                question: "In a right-angled triangle, the two perpendicular legs measure 6 cm and 8 cm. Find the length of the hypotenuse.",
+                hint: "Enter number only (in cm)",
+                acceptedAnswers: ["10"],
+                displayAnswer: "10",
+                explanation: "c = √(6² + 8²) = √(36 + 64) = √100 = 10 cm."
+            },
+            {
+                id: 67,
+                topicIndex: 13,
+                question: "The hypotenuse of a right triangle is 13 cm and one leg is 5 cm. Find the length of the other leg.",
+                hint: "Enter number only (in cm)",
+                acceptedAnswers: ["12"],
+                displayAnswer: "12",
+                explanation: "b = √(13² − 5²) = √(169 − 25) = √144 = 12 cm."
+            },
+            {
+                id: 68,
+                topicIndex: 13,
+                question: "A 15 m ladder leans against a vertical wall with its foot 9 m away from the base of the wall. How high up the wall does the ladder reach?",
+                hint: "Enter number only (in meters)",
+                acceptedAnswers: ["12"],
+                displayAnswer: "12",
+                explanation: "Height = √(15² − 9²) = √(225 − 81) = √144 = 12 m."
+            },
+            {
+                id: 69,
+                topicIndex: 13,
+                question: "Find the length of the diagonal of a rectangle whose length is 24 cm and width is 7 cm.",
+                hint: "Enter number only (in cm)",
+                acceptedAnswers: ["25"],
+                displayAnswer: "25",
+                explanation: "Diagonal = √(24² + 7²) = √(576 + 49) = √625 = 25 cm."
+            },
+            {
+                id: 70,
+                topicIndex: 13,
+                question: "Is a triangle with sides 8 cm, 15 cm, and 17 cm a right-angled triangle? (Type yes or no)",
+                hint: "Type: yes or no",
+                acceptedAnswers: ["yes"],
+                displayAnswer: "yes",
+                explanation: "8² + 15² = 64 + 225 = 289, and 17² = 289. Since a² + b² = c², it is a right-angled triangle."
+            },
+
+            // =========================================================================
+            // 15. CIRCLES (Q71 - Q75)
+            // =========================================================================
+            {
+                id: 71,
+                topicIndex: 14,
+                question: "Find the circumference of a circle with radius 7 cm. (Use π = 22/7)",
+                hint: "Enter number only (in cm)",
+                acceptedAnswers: ["44"],
+                displayAnswer: "44",
+                explanation: "C = 2πr = 2 × (22/7) × 7 = 44 cm."
+            },
+            {
+                id: 72,
+                topicIndex: 14,
+                question: "Find the area of a circle with radius 7 cm. (Use π = 22/7)",
+                hint: "Enter number only (in cm²)",
+                acceptedAnswers: ["154"],
+                displayAnswer: "154",
+                explanation: "Area = πr² = (22/7) × 7 × 7 = 154 cm²."
+            },
+            {
+                id: 73,
+                topicIndex: 14,
+                question: "The circumference of a circular wheel is 88 cm. Find its radius. (Use π = 22/7)",
+                hint: "Enter number only (in cm)",
+                acceptedAnswers: ["14"],
+                displayAnswer: "14",
+                explanation: "2 × (22/7) × r = 88 → (44/7)r = 88 → r = (88 × 7) / 44 = 14 cm."
+            },
+            {
+                id: 74,
+                topicIndex: 14,
+                question: "Find the area of a circle whose diameter is 20 cm. (Use π = 3.14)",
+                hint: "Enter number only (in cm²)",
+                acceptedAnswers: ["314"],
+                displayAnswer: "314",
+                explanation: "Radius r = 20 ÷ 2 = 10 cm. Area = πr² = 3.14 × 10² = 314 cm²."
+            },
+            {
+                id: 75,
+                topicIndex: 14,
+                question: "Find the perimeter of a semicircle with diameter 14 cm. (Include the straight diameter; use π = 22/7)",
+                hint: "Enter number only (in cm)",
+                acceptedAnswers: ["36"],
+                displayAnswer: "36",
+                explanation: "Radius r = 7 cm. Curved arc = πr = (22/7) × 7 = 22 cm. Total perimeter = 22 + 14 = 36 cm."
+            },
+
+            // =========================================================================
+            // 16. ARC LENGTH AND AREA OF A SECTOR (Q76 - Q80)
+            // =========================================================================
+            {
+                id: 76,
+                topicIndex: 15,
+                question: "Find the arc length of a sector of a circle with radius 14 cm and central angle 90°. (Use π = 22/7)",
+                hint: "Enter number only (in cm)",
+                acceptedAnswers: ["22"],
+                displayAnswer: "22",
+                explanation: "Arc length = (90/360) × 2 × (22/7) × 14 = (1/4) × 88 = 22 cm."
+            },
+            {
+                id: 77,
+                topicIndex: 15,
+                question: "Find the area of a sector with radius 7 cm and central angle 90°. (Use π = 22/7)",
+                hint: "Enter decimal number (in cm²)",
+                acceptedAnswers: ["38.5"],
+                displayAnswer: "38.5",
+                explanation: "Sector Area = (90/360) × (22/7) × 7² = (1/4) × 154 = 38.5 cm²."
+            },
+            {
+                id: 78,
+                topicIndex: 15,
+                question: "A sector of a circle has radius 21 cm and central angle 60°. Find the length of its arc. (Use π = 22/7)",
+                hint: "Enter number only (in cm)",
+                acceptedAnswers: ["22"],
+                displayAnswer: "22",
+                explanation: "Arc length = (60/360) × 2 × (22/7) × 21 = (1/6) × 132 = 22 cm."
+            },
+            {
+                id: 79,
+                topicIndex: 15,
+                question: "Find the area of a sector with radius 6 cm and central angle 60°. (Use π = 3.14)",
+                hint: "Enter decimal number (in cm²)",
+                acceptedAnswers: ["18.84"],
+                displayAnswer: "18.84",
+                explanation: "Area = (60/360) × 3.14 × 6² = (1/6) × 3.14 × 36 = 6 × 3.14 = 18.84 cm²."
+            },
+            {
+                id: 80,
+                topicIndex: 15,
+                question: "Find the arc length of a sector with radius 10 cm and central angle 72°. (Use π = 3.14)",
+                hint: "Enter decimal number (in cm)",
+                acceptedAnswers: ["12.56"],
+                displayAnswer: "12.56",
+                explanation: "Arc length = (72/360) × 2 × 3.14 × 10 = (1/5) × 62.8 = 12.56 cm."
+            },
+
+            // =========================================================================
+            // 17. VOLUME & SURFACE AREA OF PYRAMID, SPHERE, CONE (Q81 - Q85)
+            // =========================================================================
+            {
+                id: 81,
+                topicIndex: 16,
+                question: "Find the volume of a square-based pyramid with base edge 6 cm and vertical height 10 cm.",
+                hint: "Enter number only (in cm³)",
+                acceptedAnswers: ["120"],
+                displayAnswer: "120",
+                explanation: "Volume = (1/3) × Base Area × Height = (1/3) × 6² × 10 = (1/3) × 360 = 120 cm³."
+            },
+            {
+                id: 82,
+                topicIndex: 16,
+                question: "Find the surface area of a sphere with radius 7 cm. (Use π = 22/7)",
+                hint: "Enter number only (in cm²)",
+                acceptedAnswers: ["616"],
+                displayAnswer: "616",
+                explanation: "Surface Area = 4πr² = 4 × (22/7) × 7² = 4 × 154 = 616 cm²."
+            },
+            {
+                id: 83,
+                topicIndex: 16,
+                question: "Find the volume of a sphere with radius 3 cm. (Use π = 3.14)",
+                hint: "Enter decimal number (in cm³)",
+                acceptedAnswers: ["113.04"],
+                displayAnswer: "113.04",
+                explanation: "Volume = (4/3)πr³ = (4/3) × 3.14 × 27 = 36 × 3.14 = 113.04 cm³."
+            },
+            {
+                id: 84,
+                topicIndex: 16,
+                question: "Find the volume of a right circular cone with radius 7 cm and height 12 cm. (Use π = 22/7)",
+                hint: "Enter number only (in cm³)",
+                acceptedAnswers: ["616"],
+                displayAnswer: "616",
+                explanation: "Volume = (1/3)πr²h = (1/3) × (22/7) × 49 × 12 = 22 × 7 × 4 = 616 cm³."
+            },
+            {
+                id: 85,
+                topicIndex: 16,
+                question: "Find the curved surface area of a cone with radius 7 cm and slant height 10 cm. (Use π = 22/7)",
+                hint: "Enter number only (in cm²)",
+                acceptedAnswers: ["220"],
+                displayAnswer: "220",
+                explanation: "Curved Surface Area = πrl = (22/7) × 7 × 10 = 220 cm²."
+            },
+
+            // =========================================================================
+            // 18. PROBABILITY (Q86 - Q90)
+            // =========================================================================
+            {
+                id: 86,
+                topicIndex: 17,
+                question: "A fair six-sided die is rolled once. What is the probability of rolling an even number?",
+                hint: "Answer as a simplified fraction (e.g., 1/2)",
+                acceptedAnswers: ["1/2", "0.5"],
+                displayAnswer: "1/2",
+                explanation: "Even numbers on a die are {2, 4, 6} (3 outcomes out of 6). Probability = 3/6 = 1/2."
+            },
+            {
+                id: 87,
+                topicIndex: 17,
+                question: "A bag contains 3 red, 5 blue, and 2 green marbles. One marble is drawn at random. What is the probability that it is blue?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["1/2", "0.5"],
+                displayAnswer: "1/2",
+                explanation: "Total marbles = 3 + 5 + 2 = 10. P(blue) = 5/10 = 1/2."
+            },
+            {
+                id: 88,
+                topicIndex: 17,
+                question: "What is the probability of getting a tail when a fair coin is tossed once?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["1/2", "0.5"],
+                displayAnswer: "1/2",
+                explanation: "There is 1 tail out of 2 equally likely outcomes, so P(Tail) = 1/2."
+            },
+            {
+                id: 89,
+                topicIndex: 17,
+                question: "One card is drawn at random from a standard deck of 52 playing cards. What is the probability of drawing a King?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["1/13"],
+                displayAnswer: "1/13",
+                explanation: "There are 4 Kings in a 52-card deck. P(King) = 4/52 = 1/13."
+            },
+            {
+                id: 90,
+                topicIndex: 17,
+                question: "A letter is chosen at random from the word MATHEMATICS. What is the probability that the letter is 'M'?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["2/11"],
+                displayAnswer: "2/11",
+                explanation: "MATHEMATICS has 11 letters in total, and 'M' appears 2 times. P(M) = 2/11."
+            },
+
+            // =========================================================================
+            // 19. MUTUALLY EXCLUSIVE EVENTS (Q91 - Q95)
+            // =========================================================================
+            {
+                id: 91,
+                topicIndex: 18,
+                question: "A fair six-sided die is rolled. What is the probability of rolling a 2 or a 5?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["1/3"],
+                displayAnswer: "1/3",
+                explanation: "Rolling a 2 and rolling a 5 are mutually exclusive: P(2 or 5) = 1/6 + 1/6 = 2/6 = 1/3."
+            },
+            {
+                id: 92,
+                topicIndex: 18,
+                question: "A bag has 4 red, 3 yellow, and 5 green balls. One ball is picked at random. What is the probability that it is red or green?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["3/4", "0.75"],
+                displayAnswer: "3/4",
+                explanation: "Total balls = 12. P(red or green) = 4/12 + 5/12 = 9/12 = 3/4."
+            },
+            {
+                id: 93,
+                topicIndex: 18,
+                question: "If A and B are mutually exclusive events with P(A) = 0.35 and P(B) = 0.42, find P(A or B).",
+                hint: "Enter decimal number",
+                acceptedAnswers: ["0.77", ".77"],
+                displayAnswer: "0.77",
+                explanation: "For mutually exclusive events, P(A or B) = P(A) + P(B) = 0.35 + 0.42 = 0.77."
+            },
+            {
+                id: 94,
+                topicIndex: 18,
+                question: "A card is drawn from a standard 52-card deck. What is the probability of drawing an Ace or a Queen?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["2/13"],
+                displayAnswer: "2/13",
+                explanation: "There are 4 Aces and 4 Queens (disjoint). P(Ace or Queen) = 4/52 + 4/52 = 8/52 = 2/13."
+            },
+            {
+                id: 95,
+                topicIndex: 18,
+                question: "A spinner has 8 equal sections numbered 1 to 8. What is the probability of landing on a multiple of 3 or the number 5?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["3/8", "0.375"],
+                displayAnswer: "3/8",
+                explanation: "Multiples of 3 are {3, 6} (2 outcomes) and {5} (1 outcome). Total favorable = 3 out of 8, so 3/8."
+            },
+
+            // =========================================================================
+            // 20. INDEPENDENT EVENTS (Q96 - Q100)
+            // =========================================================================
+            {
+                id: 96,
+                topicIndex: 19,
+                question: "Two fair coins are tossed at the same time. What is the probability of getting two heads?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["1/4", "0.25"],
+                displayAnswer: "1/4",
+                explanation: "Coin tosses are independent: P(Head and Head) = (1/2) × (1/2) = 1/4."
+            },
+            {
+                id: 97,
+                topicIndex: 19,
+                question: "A fair coin is tossed and a fair six-sided die is rolled. What is the probability of getting a Head and a 6?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["1/12"],
+                displayAnswer: "1/12",
+                explanation: "P(Head and 6) = P(Head) × P(6) = (1/2) × (1/6) = 1/12."
+            },
+            {
+                id: 98,
+                topicIndex: 19,
+                question: "Two fair six-sided dice are rolled. What is the probability that both dice show a number greater than 4?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["1/9"],
+                displayAnswer: "1/9",
+                explanation: "Numbers > 4 on a die are {5, 6}, so P(>4) = 2/6 = 1/3. For both dice: (1/3) × (1/3) = 1/9."
+            },
+            {
+                id: 99,
+                topicIndex: 19,
+                question: "A bag contains 3 white and 2 black marbles. A marble is drawn, replaced, and a second marble is drawn. What is the probability that both are black?",
+                hint: "Answer as a simplified fraction",
+                acceptedAnswers: ["4/25", "0.16"],
+                displayAnswer: "4/25",
+                explanation: "With replacement, draws are independent: P(Black and Black) = (2/5) × (2/5) = 4/25."
+            },
+            {
+                id: 100,
+                topicIndex: 19,
+                question: "Events X and Y are independent. If P(X) = 0.4 and P(Y) = 0.5, find P(X and Y).",
+                hint: "Enter decimal number",
+                acceptedAnswers: ["0.2", "0.20", ".2"],
+                displayAnswer: "0.2",
+                explanation: "For independent events, P(X and Y) = P(X) × P(Y) = 0.4 × 0.5 = 0.2."
+            }
+        ];
+
+        // State variables
+        let isSubmitted = false;
+        let currentTopicFilter = "all";
+        let currentReviewFilter = "all";
+        let lastTotalScore = 0;
+        let topicScores = new Array(TOPICS.length).fill(0);
+
+        /**
+         * Normalizes student answers so minor differences in spacing, case,
+         * currency symbols, or common unit labels do not unfairly penalize students.
+         */
+        function normalizeAnswer(raw) {
+            if (!raw) return "";
+            let str = raw.toString().trim().toLowerCase();
+            // Remove currency symbols and common unit suffixes
+            str = str.replace(/[$£€]/g, "");
+            str = str.replace(/\b(rs|pkr|usd|eur|gbp|sar|cm2|cm3|cm²|cm³|cm|m2|m²|m|km|days|day|hours|hour|hrs|hr|liters|litres|liter|litre|degrees|deg|percent|%)\b/g, "");
+            str = str.replace(/°/g, "");
+            // Remove all whitespace
+            str = str.replace(/\s+/g, "");
+            return str;
+        }
+
+        /**
+         * Populates the Topic Filter dropdown.
+         */
+        function populateTopicDropdown() {
+            const select = document.getElementById("topic-filter");
+            TOPICS.forEach((topicName, index) => {
+                const option = document.createElement("option");
+                option.value = index.toString();
+                const startQ = index * 5 + 1;
+                const endQ = startQ + 4;
+                option.textContent = `${topicName} (Q${startQ}–Q${endQ})`;
+                select.appendChild(option);
+            });
+        }
+
+        /**
+         * Renders all 100 questions grouped under topic headers.
+         */
+        function renderAllQuestions() {
+            const container = document.getElementById("questions-container");
+            container.innerHTML = "";
+
+            QUESTIONS.forEach((q, idx) => {
+                // Insert Topic Section Banner at the start of every 5-question block
+                if (idx % 5 === 0) {
+                    const banner = document.createElement("div");
+                    banner.className = "topic-banner";
+                    banner.dataset.topicIndex = q.topicIndex;
+                    banner.innerHTML = `
+                        <div>${TOPICS[q.topicIndex]}</div>
+                        <span>Questions ${q.id} – ${q.id + 4}</span>
+                    `;
+                    container.appendChild(banner);
+                }
+
+                const card = document.createElement("div");
+                card.className = "question-card";
+                card.id = `q-card-${q.id}`;
+                card.dataset.topicIndex = q.topicIndex;
+                card.dataset.questionId = q.id;
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="q-meta">
+                            <span class="q-num">Q${q.id}</span>
+                            <span class="q-topic-tag">${TOPICS[q.topicIndex]}</span>
+                        </div>
+                        <span id="q-badge-${q.id}" class="q-status-badge"></span>
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="q-hint">Hint: ${q.hint}</div>
+                    <div class="answer-row">
+                        <label for="q-input-${q.id}">Your Answer:</label>
+                        <input
+                            type="text"
+                            id="q-input-${q.id}"
+                            class="answer-input"
+                            autocomplete="off"
+                            placeholder="Type answer here..."
+                            oninput="updateProgressCounters()"
+                        >
+                    </div>
+                    <div id="q-feedback-${q.id}" class="feedback-box">
+                        <div class="feedback-answer-line">
+                            Correct Answer: <span class="correct-pill">${q.displayAnswer}</span>
+                        </div>
+                        <div class="feedback-explanation">
+                            <strong>Step-by-Step Solution:</strong> ${q.explanation}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        /**
+         * Updates live progress counters and progress bar width.
+         */
+        function updateProgressCounters() {
+            let answered = 0;
+            for (let i = 1; i <= QUESTIONS.length; i++) {
+                const input = document.getElementById(`q-input-${i}`);
+                if (input && input.value.trim() !== "") {
+                    answered++;
+                }
+            }
+            document.getElementById("top-progress-count").textContent = answered;
+            document.getElementById("bottom-progress-count").textContent = answered;
+            document.getElementById("top-progress-bar").style.width = `${answered}%`;
+        }
+
+        /**
+         * Filters displayed questions by selected topic and post-submit review mode.
+         */
+        function applyVisibilityFilters() {
+            const topicVal = document.getElementById("topic-filter").value;
+            currentTopicFilter = topicVal;
+
+            const banners = document.querySelectorAll(".topic-banner");
+            banners.forEach((banner) => {
+                if (topicVal === "all" || banner.dataset.topicIndex === topicVal) {
+                    banner.classList.remove("hidden");
+                } else {
+                    banner.classList.add("hidden");
+                }
+            });
+
+            const cards = document.querySelectorAll(".question-card");
+            cards.forEach((card) => {
+                const matchesTopic = (topicVal === "all" || card.dataset.topicIndex === topicVal);
+                const matchesReview = (!isSubmitted || currentReviewFilter === "all" || card.classList.contains("is-incorrect"));
+
+                if (matchesTopic && matchesReview) {
+                    card.classList.remove("hidden");
+                } else {
+                    card.classList.add("hidden");
+                }
+            });
+        }
+
+        function applyTopicFilter() {
+            applyVisibilityFilters();
+        }
+
+        function setReviewFilter(mode) {
+            currentReviewFilter = mode;
+            document.getElementById("filter-all-btn").classList.toggle("active", mode === "all");
+            document.getElementById("filter-wrong-btn").classList.toggle("active", mode === "wrong");
+            applyVisibilityFilters();
+        }
+
+        /**
+         * Determines letter grade from score percentage.
+         */
+        function getLetterGrade(score) {
+            if (score >= 90) return "A+";
+            if (score >= 80) return "A";
+            if (score >= 70) return "B";
+            if (score >= 60) return "C";
+            if (score >= 50) return "D";
+            return "F";
+        }
+
+        /**
+         * Grades all 100 questions, generates the 20-topic breakdown grid,
+         * highlights cards, and displays step-by-step solutions for wrong answers.
+         */
+        function handleQuizSubmit(event) {
+            event.preventDefault();
+            if (isSubmitted) return;
+
+            isSubmitted = true;
+            let totalCorrect = 0;
+            topicScores = new Array(TOPICS.length).fill(0);
+
+            QUESTIONS.forEach((q) => {
+                const card = document.getElementById(`q-card-${q.id}`);
+                const input = document.getElementById(`q-input-${q.id}`);
+                const badge = document.getElementById(`q-badge-${q.id}`);
+                const feedback = document.getElementById(`q-feedback-${q.id}`);
+
+                const userNorm = normalizeAnswer(input.value);
+                const isRight = userNorm !== "" && q.acceptedAnswers.includes(userNorm);
+
+                input.disabled = true;
+
+                if (isRight) {
+                    totalCorrect++;
+                    topicScores[q.topicIndex]++;
+                    card.classList.add("is-correct");
+                    input.classList.add("input-correct");
+                    badge.textContent = "✓ Correct";
+                    badge.classList.add("correct");
+                } else {
+                    card.classList.add("is-incorrect");
+                    input.classList.add("input-incorrect");
+                    if (input.value.trim() === "") {
+                        input.value = "(Unanswered)";
+                    }
+                    badge.textContent = "✕ Incorrect";
+                    badge.classList.add("incorrect");
+                    feedback.style.display = "block";
+                }
+            });
+
+            lastTotalScore = totalCorrect;
+            const wrongTotal = QUESTIONS.length - totalCorrect;
+
+            // Update Results Banner
+            const studentName = document.getElementById("student-name").value.trim();
+            const studentClass = document.getElementById("student-class").value.trim();
+
+            let heading = "Comprehensive Quiz Results";
+            if (studentName && studentClass) {
+                heading = `${studentName} (${studentClass})`;
+            } else if (studentName) {
+                heading = `${studentName}'s Quiz Results`;
+            } else if (studentClass) {
+                heading = `Quiz Results — ${studentClass}`;
+            }
+
+            document.getElementById("res-student-heading").textContent = heading;
+            document.getElementById("res-score-fraction").textContent = `${totalCorrect} / 100`;
+            document.getElementById("res-score-percent").textContent = `${totalCorrect}%`;
+            document.getElementById("res-letter-grade").textContent = getLetterGrade(totalCorrect);
+            document.getElementById("wrong-count-label").textContent = wrongTotal;
+
+            // Render 20-Topic Breakdown Grid
+            const breakdownGrid = document.getElementById("topic-breakdown-grid");
+            breakdownGrid.innerHTML = "";
+            TOPICS.forEach((topicName, index) => {
+                const score = topicScores[index];
+                let scoreClass = "score-low";
+                if (score >= 4) scoreClass = "score-high";
+                else if (score >= 2) scoreClass = "score-mid";
+
+                const item = document.createElement("div");
+                item.className = "topic-stat-card";
+                item.innerHTML = `
+                    <span class="topic-stat-name">${topicName}</span>
+                    <span class="topic-stat-score ${scoreClass}">${score} / 5</span>
+                `;
+                breakdownGrid.appendChild(item);
+            });
+
+            // Lock student info fields, hide submit bar, show dashboard
+            document.getElementById("student-name").disabled = true;
+            document.getElementById("student-class").disabled = true;
+            document.getElementById("submit-bar").classList.add("hidden");
+            document.getElementById("results-dashboard").style.display = "block";
+
+            // Reset topic filter to show all questions initially on review
+            document.getElementById("topic-filter").value = "all";
+            setReviewFilter("all");
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        /**
+         * Copies a structured summary of overall and per-topic scores to clipboard.
+         */
+        function copyResultsSummary() {
+            const studentName = document.getElementById("student-name").value.trim() || "Not provided";
+            const studentClass = document.getElementById("student-class").value.trim() || "Not provided";
+            const grade = getLetterGrade(lastTotalScore);
+
+            const lines = [
+                "📊 Grade 8 Comprehensive Mathematics Quiz (100 Questions)",
+                `👤 Student: ${studentName}`,
+                `🏫 Class/Section: ${studentClass}`,
+                `✅ Overall Score: ${lastTotalScore} / 100 (${lastTotalScore}% — Grade ${grade})`,
+                "",
+                "📋 Topic-by-Topic Breakdown:"
+            ];
+
+            TOPICS.forEach((topicName, idx) => {
+                lines.push(`• ${topicName}: ${topicScores[idx]}/5`);
+            });
+
+            const summaryText = lines.join("\n");
+            const textarea = document.createElement("textarea");
+            textarea.value = summaryText;
+            textarea.style.position = "fixed";
+            textarea.style.left = "-9999px";
+            document.body.appendChild(textarea);
+            textarea.select();
+
+            try {
+                document.execCommand("copy");
+                const copyBtn = document.getElementById("copy-btn");
+                copyBtn.textContent = "✓ Copied Summary to Clipboard!";
+                copyBtn.classList.remove("btn-primary");
+                copyBtn.classList.add("btn-success");
+                setTimeout(() => {
+                    copyBtn.textContent = "Copy Results Summary";
+                    copyBtn.classList.remove("btn-success");
+                    copyBtn.classList.add("btn-primary");
+                }, 2500);
+            } catch (err) {
+                console.error("Failed to copy summary:", err);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        /**
+         * Resets the entire 100-question quiz so a student can retake it.
+         */
+        function resetQuiz() {
+            isSubmitted = false;
+            lastTotalScore = 0;
+            topicScores = new Array(TOPICS.length).fill(0);
+            currentReviewFilter = "all";
+
+            document.getElementById("results-dashboard").style.display = "none";
+            document.getElementById("submit-bar").classList.remove("hidden");
+
+            document.getElementById("student-name").disabled = false;
+            document.getElementById("student-class").disabled = false;
+            document.getElementById("topic-filter").value = "all";
+
+            renderAllQuestions();
+            updateProgressCounters();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // Initialize application
+        window.addEventListener("DOMContentLoaded", () => {
+            populateTopicDropdown();
+            renderAllQuestions();
+            updateProgressCounters();
+        });
+    </script>
+</body>
+</html>
